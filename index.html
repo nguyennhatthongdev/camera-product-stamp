@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Chụp Ảnh Sản Phẩm & Đóng Dấu STT - StampCam Pro</title>
+  <title>StampCam Pro - Chụp Ảnh Đóng Dấu STT</title>
 
   <!-- PWA & iOS Safari Meta Tags -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -20,6 +20,7 @@
       --primary: #3b82f6;
       --primary-hover: #2563eb;
       --accent: #10b981;
+      --accent-hover: #059669;
       --danger: #ef4444;
       --warning: #f59e0b;
       --bg: #0f172a;
@@ -489,7 +490,7 @@
     }
 
     input:checked + .slider {
-      background-color: var(--primary);
+      background-color: var(--accent);
     }
 
     input:checked + .slider:before {
@@ -500,22 +501,22 @@
     .modal-backdrop {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.88);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       z-index: 100;
       display: none;
       flex-direction: column;
-      padding: 20px 16px;
-      padding-top: calc(env(safe-area-inset-top, 0px) + 20px);
-      padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+      padding: 16px;
+      padding-top: calc(env(safe-area-inset-top, 0px) + 14px);
+      padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
     }
 
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 14px;
+      margin-bottom: 10px;
     }
 
     .modal-body {
@@ -525,20 +526,36 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
+      position: relative;
     }
 
     .modal-body img {
       max-width: 100%;
-      max-height: 60vh;
+      max-height: 55vh;
       border-radius: 12px;
       border: 1px solid var(--border);
       object-fit: contain;
+      user-select: auto;
+      -webkit-user-select: auto;
+    }
+
+    .photo-hint {
+      margin-top: 8px;
+      font-size: 0.78rem;
+      color: #94a3b8;
+      background: rgba(0,0,0,0.5);
+      padding: 4px 10px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .modal-footer {
       display: flex;
+      flex-direction: column;
       gap: 10px;
-      margin-top: 14px;
+      margin-top: 12px;
       width: 100%;
       max-width: 500px;
       margin-left: auto;
@@ -546,17 +563,17 @@
     }
 
     .btn {
-      flex: 1;
-      padding: 12px;
-      border-radius: 12px;
-      font-size: 0.92rem;
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      font-size: 1rem;
       font-weight: 700;
       border: none;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 8px;
       transition: transform 0.1s, opacity 0.2s;
     }
 
@@ -564,8 +581,14 @@
       transform: scale(0.96);
     }
 
+    .btn-accent {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+      font-size: 1.05rem;
+    }
+
     .btn-primary { background: var(--primary); color: #fff; }
-    .btn-success { background: var(--accent); color: #fff; }
     .btn-secondary { background: #334155; color: #fff; }
     .btn-danger { background: var(--danger); color: #fff; }
 
@@ -749,7 +772,7 @@
     <!-- Tùy Chọn Cài Đặt -->
     <div class="control-card">
       <div class="collapsible-header" id="settingsToggle">
-        <span>⚙️ TÙY CHỌN ĐÓNG DẤU</span>
+        <span>⚙️ TÙY CHỌN ĐÓNG DẤU & LƯU ẢNH</span>
         <span id="settingsArrow">▼</span>
       </div>
 
@@ -819,19 +842,33 @@
     </div>
   </main>
 
-  <!-- Modal Xem Lại Ảnh Vừa Chụp -->
+  <!-- Modal Xem Lại Ảnh Vừa Chụp & Lưu Vào Thư Viện iPhone -->
   <div class="modal-backdrop" id="previewModal">
     <div class="modal-header">
-      <h3 style="font-size: 1.1rem; font-weight: 700; color: #38bdf8;">Ảnh Vừa Chụp</h3>
+      <h3 style="font-size: 1.1rem; font-weight: 700; color: #38bdf8;">Ảnh Vừa Đóng Dấu</h3>
       <button class="btn-icon-glass" id="btnClosePreview">✕</button>
     </div>
     <div class="modal-body">
       <img id="previewModalImg" src="" alt="Ảnh đóng dấu">
+      <div class="photo-hint">
+        💡 <span>Mẹo: Bạn có thể <b>Chạm & Giữ vào ảnh</b> để chọn "Lưu vào Ảnh"</span>
+      </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-secondary" id="btnRetake">Chụp tiếp</button>
-      <button class="btn btn-primary" id="btnSharePhoto">Chia sẻ / Lưu</button>
-      <button class="btn btn-success" id="btnDownloadSingle">Tải về</button>
+      <!-- Nút ưu tiên lưu thẳng vào thư viện ảnh iPhone (Photos Album) -->
+      <button class="btn btn-accent" id="btnSaveToPhotos">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <circle cx="8.5" cy="8.5" r="1.5"></circle>
+          <polyline points="21 15 16 10 5 21"></polyline>
+        </svg>
+        <span>📲 Lưu Vào Thư Viện Ảnh (Photos)</span>
+      </button>
+
+      <div style="display: flex; gap: 8px;">
+        <button class="btn btn-secondary" id="btnRetake">📸 Chụp tiếp</button>
+        <button class="btn btn-primary" id="btnDownloadSingle">⬇️ Tải file</button>
+      </div>
     </div>
   </div>
 
@@ -847,7 +884,7 @@
     <div class="modal-footer" style="flex-direction: column;">
       <div style="display: flex; gap: 8px; width: 100%;">
         <button class="btn btn-danger" id="btnClearGallery">Xóa tất cả</button>
-        <button class="btn btn-success" id="btnDownloadZip">📦 Tải file ZIP</button>
+        <button class="btn btn-accent" id="btnDownloadZip">📦 Tải tất cả (File ZIP)</button>
       </div>
     </div>
   </div>
@@ -892,7 +929,7 @@
     const previewModalImg = document.getElementById('previewModalImg');
     const btnClosePreview = document.getElementById('btnClosePreview');
     const btnRetake = document.getElementById('btnRetake');
-    const btnSharePhoto = document.getElementById('btnSharePhoto');
+    const btnSaveToPhotos = document.getElementById('btnSaveToPhotos');
     const btnDownloadSingle = document.getElementById('btnDownloadSingle');
 
     const galleryModal = document.getElementById('galleryModal');
@@ -1178,7 +1215,7 @@
 
       previewModalImg.src = dataUrl;
       previewModal.style.display = 'flex';
-      showToast(`Đã chụp & đóng dấu: ${code}`);
+      showToast(`Đã đóng dấu: ${code}`);
     }
 
     btnCapture.addEventListener('click', () => {
@@ -1213,32 +1250,41 @@
       reader.readAsDataURL(file);
     });
 
-    btnDownloadSingle.addEventListener('click', () => {
+    // 📲 LƯU THẲNG VÀO THƯ VIỆN ẢNH IPHONE (PHOTOS APP)
+    async function saveImageToIPhonePhotos() {
       if (!state.currentPhotoDataUrl) return;
-      const link = document.createElement('a');
-      link.download = `${state.currentPhotoCode}_${Date.now()}.jpg`;
-      link.href = state.currentPhotoDataUrl;
-      link.click();
-      showToast('Đã lưu ảnh về máy!');
-    });
 
-    btnSharePhoto.addEventListener('click', async () => {
-      if (!state.currentPhotoDataUrl) return;
       try {
         const res = await fetch(state.currentPhotoDataUrl);
         const blob = await res.blob();
         const file = new File([blob], `${state.currentPhotoCode}.jpg`, { type: 'image/jpeg' });
 
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          // Kích hoạt bảng chia sẻ iOS -> người dùng chạm "Lưu hình ảnh" (Save Image)
           await navigator.share({
             files: [file],
-            title: `Sản phẩm ${state.currentPhotoCode}`,
-            text: `Ảnh sản phẩm ${state.currentPhotoCode}`
+            title: state.currentPhotoCode
           });
         } else {
+          // Fallback tải xuống nếu không hỗ trợ Web Share
           btnDownloadSingle.click();
         }
-      } catch (err) {}
+      } catch (err) {
+        // Nếu người dùng đóng bảng chia sẻ
+        console.log('Share dismissed:', err);
+      }
+    }
+
+    btnSaveToPhotos.addEventListener('click', saveImageToIPhonePhotos);
+
+    // Tải file trực tiếp
+    btnDownloadSingle.addEventListener('click', () => {
+      if (!state.currentPhotoDataUrl) return;
+      const link = document.createElement('a');
+      link.download = `${state.currentPhotoCode}_${Date.now()}.jpg`;
+      link.href = state.currentPhotoDataUrl;
+      link.click();
+      showToast('Đã tải ảnh về máy!');
     });
 
     btnClosePreview.addEventListener('click', () => previewModal.style.display = 'none');
@@ -1286,7 +1332,6 @@
       }
     });
 
-    // Tải tất cả ảnh dạng file ZIP
     btnDownloadZip.addEventListener('click', async () => {
       if (state.capturedPhotos.length === 0) return;
 
