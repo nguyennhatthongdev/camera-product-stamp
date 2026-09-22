@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>StampCam - Chụp Ảnh & Đóng Dấu Sản Phẩm</title>
+  <title>StampCam - Chụp Ảnh & Đóng Dấu Đa Sản Phẩm</title>
 
   <!-- PWA & iOS Safari Meta Tags -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="StampCam">
-  <meta name="theme-color" content="#000000">
+  <meta name="theme-color" content="#090a0f">
   <link rel="manifest" href="manifest.json">
 
   <!-- JSZip -->
@@ -24,7 +24,6 @@
       --text-muted: #71717a;
       --text-dim: #a1a1aa;
       --accent: #2563eb;
-      --accent-hover: #1d4ed8;
       --radius: 18px;
     }
 
@@ -95,7 +94,37 @@
       gap: 12px;
     }
 
-    /* Minimal Control Card */
+    /* Mode Selector Tabs (1 Sản Phẩm vs Nhiều Sản Phẩm) */
+    .mode-tab-bar {
+      display: flex;
+      background: #14161f;
+      padding: 4px;
+      border-radius: 14px;
+      border: 1px solid var(--card-border);
+      gap: 4px;
+    }
+
+    .mode-tab {
+      flex: 1;
+      padding: 9px 6px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text-dim);
+      transition: all 0.2s;
+      border: none;
+      background: transparent;
+    }
+
+    .mode-tab.active {
+      background: #ffffff;
+      color: #000000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+
+    /* Control Card */
     .control-card {
       background: var(--card-bg);
       border-radius: var(--radius);
@@ -213,7 +242,7 @@
       display: block;
     }
 
-    /* 🏷️ Minimal Badge Overlay */
+    /* Live Stamp Overlay (Góc đơn) */
     .stamp-overlay {
       position: absolute;
       pointer-events: none;
@@ -222,13 +251,11 @@
       max-width: 88%;
     }
 
-    /* Vị trí */
     .pos-top-left { top: 14px; left: 14px; }
     .pos-top-right { top: 14px; right: 14px; }
     .pos-bottom-left { bottom: 14px; left: 14px; }
     .pos-bottom-right { bottom: 14px; right: 14px; }
 
-    /* Kiểu Badge Tối Giản (Minimalist Styles) */
     .stamp-badge {
       display: inline-flex;
       flex-direction: column;
@@ -239,7 +266,6 @@
       -webkit-backdrop-filter: blur(8px);
     }
 
-    /* 1. Đen Mờ Tối Giản (Mặc định - Clean Minimal Dark) */
     .style-dark {
       background: rgba(0, 0, 0, 0.75);
       color: #ffffff;
@@ -250,7 +276,6 @@
     .style-dark .stamp-note { color: #e4e4e7; font-weight: 500; }
     .style-dark .stamp-sub { color: #a1a1aa; }
 
-    /* 2. Trắng Tinh Tế (Clean Light) */
     .style-light {
       background: rgba(255, 255, 255, 0.88);
       color: #09090b;
@@ -261,7 +286,6 @@
     .style-light .stamp-note { color: #27272a; }
     .style-light .stamp-sub { color: #71717a; }
 
-    /* 3. Đen Thuần Không Viền (Solid Black) */
     .style-solid-black {
       background: #000000;
       color: #ffffff;
@@ -288,7 +312,6 @@
       margin-top: 1px;
     }
 
-    /* Size Modifiers for Live Overlay */
     .size-small .stamp-num { font-size: 0.92rem; }
     .size-small .stamp-note { font-size: 0.68rem; }
     .size-small .stamp-sub { font-size: 0.58rem; }
@@ -298,7 +321,7 @@
     .size-large .stamp-num { font-size: 1.32rem; }
     .size-xlarge .stamp-num { font-size: 1.6rem; }
 
-    /* Camera Switch */
+    /* Camera Actions */
     .camera-top-actions {
       position: absolute;
       top: 12px;
@@ -327,6 +350,25 @@
 
     .btn-icon-glass:active {
       transform: scale(0.9);
+    }
+
+    /* Multi-Mode Banner on Camera */
+    .multi-mode-indicator {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #60a5fa;
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: none;
+      align-items: center;
+      gap: 6px;
+      z-index: 15;
     }
 
     /* Shutter Bar */
@@ -464,7 +506,6 @@
       color: var(--text-dim);
     }
 
-    /* Switch */
     .switch {
       position: relative;
       display: inline-block;
@@ -507,69 +548,26 @@
       transform: translateX(18px);
     }
 
-    /* Modal Gallery / Preview */
+    /* Modal Backdrop */
     .modal-backdrop {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.92);
+      background: rgba(0, 0, 0, 0.94);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       z-index: 100;
       display: none;
       flex-direction: column;
       padding: 16px;
-      padding-top: calc(env(safe-area-inset-top, 0px) + 14px);
-      padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
+      padding-top: calc(env(safe-area-inset-top, 0px) + 12px);
+      padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
     }
 
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .modal-body {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .modal-body img {
-      max-width: 100%;
-      max-height: 56vh;
-      border-radius: 14px;
-      border: 1px solid var(--card-border);
-      object-fit: contain;
-      user-select: auto;
-      -webkit-user-select: auto;
-    }
-
-    .photo-hint {
-      margin-top: 8px;
-      font-size: 0.75rem;
-      color: #71717a;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 4px 10px;
-      border-radius: 20px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .modal-footer {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 12px;
-      width: 100%;
-      max-width: 480px;
-      margin-left: auto;
-      margin-right: auto;
+      margin-bottom: 8px;
     }
 
     .btn {
@@ -591,24 +589,101 @@
       transform: scale(0.97);
     }
 
-    /* Clean Apple-style Buttons */
-    .btn-main {
-      background: #ffffff;
-      color: #000000;
+    .btn-main { background: #ffffff; color: #000000; }
+    .btn-secondary { background: #27272a; color: #ffffff; }
+    .btn-danger { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); }
+
+    /* 🎯 MULTI-PRODUCT PIN EDITOR MODAL */
+    .editor-container {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: 14px;
+      background: #000;
+      border: 1px solid var(--card-border);
+      touch-action: none;
     }
 
-    .btn-secondary {
-      background: #27272a;
-      color: #ffffff;
+    #editorImage {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+      pointer-events: none;
     }
 
-    .btn-danger {
-      background: rgba(239, 68, 68, 0.15);
+    .pin-layer {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      cursor: crosshair;
+    }
+
+    /* Ghim Pin trên hình */
+    .product-pin {
+      position: absolute;
+      transform: translate(-50%, -100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: grab;
+      z-index: 20;
+      animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .product-pin:active {
+      cursor: grabbing;
+    }
+
+    @keyframes popIn {
+      0% { transform: translate(-50%, -80%) scale(0.5); opacity: 0; }
+      100% { transform: translate(-50%, -100%) scale(1); opacity: 1; }
+    }
+
+    .pin-pill {
+      background: rgba(0, 0, 0, 0.85);
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      white-space: nowrap;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pin-del-btn {
       color: #f87171;
-      border: 1px solid rgba(239, 68, 68, 0.2);
+      font-size: 0.75rem;
+      padding: 0 2px;
+      font-weight: bold;
+      cursor: pointer;
     }
 
-    /* Gallery Grid */
+    .pin-pointer {
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 7px solid rgba(0, 0, 0, 0.85);
+      margin-top: -1px;
+    }
+
+    .editor-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 4px;
+      color: var(--text-dim);
+      font-size: 0.78rem;
+    }
+
+    /* Modal Gallery */
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -714,7 +789,13 @@
   </header>
 
   <main>
-    <!-- Số Thứ Tự & Mã Sản Phẩm -->
+    <!-- 🔀 Chọn Chế Độ Chụp -->
+    <div class="mode-tab-bar">
+      <button class="mode-tab active" id="tabSingleMode">🏷️ 1 Sản Phẩm / Ảnh</button>
+      <button class="mode-tab" id="tabMultiMode">🎯 Nhiều Sản Phẩm (Ghim SP)</button>
+    </div>
+
+    <!-- Số Thứ Tự & Tiền Tố -->
     <div class="control-card">
       <div class="card-row">
         <div class="input-group" style="flex: 1.1;">
@@ -722,7 +803,7 @@
           <input type="text" id="prefixInput" value="SP-" placeholder="VD: SP-, MS-">
         </div>
         <div class="input-group" style="flex: 1.8;">
-          <label>Số thứ tự (STT)</label>
+          <label>STT Bắt đầu</label>
           <div class="input-row">
             <button class="btn-step" id="btnDec" title="Giảm 1">-</button>
             <input type="number" id="seqInput" value="1" min="1" style="text-align: center;">
@@ -731,13 +812,13 @@
         </div>
       </div>
 
-      <div class="input-group" style="margin-top: 10px;">
-        <label>Ghi chú / Tên SP (Tùy chọn)</label>
+      <div class="input-group" id="noteInputGroup" style="margin-top: 10px;">
+        <label>Ghi chú (Tùy chọn)</label>
         <input type="text" id="noteInput" placeholder="VD: Size L - Đen">
       </div>
 
       <div class="quick-preview-tag">
-        <span style="color: var(--text-dim);">Xem trước mã:</span>
+        <span style="color: var(--text-dim);" id="previewLabel">Mã hiện tại:</span>
         <span class="preview-code" id="previewCodeText">SP-0001</span>
       </div>
     </div>
@@ -748,7 +829,7 @@
 
       <video id="videoPreview" playsinline autoplay muted></video>
 
-      <!-- Minimal Live Stamp Overlay -->
+      <!-- Live Stamp Overlay cho Chế độ Đơn -->
       <div class="stamp-overlay pos-top-left style-dark" id="liveStamp">
         <div class="stamp-badge">
           <span class="stamp-num" id="overlayStampNum">SP-0001</span>
@@ -757,7 +838,11 @@
         </div>
       </div>
 
-      <!-- Action buttons on camera -->
+      <!-- Chỉ báo Chế độ Đa Sản Phẩm -->
+      <div class="multi-mode-indicator" id="multiModeIndicator">
+        🎯 Chế độ: Chụp xong chạm để ghim từng SP
+      </div>
+
       <div class="camera-top-actions">
         <button class="btn-icon-glass" id="btnSwitchCam" title="Đổi camera trước/sau">
           🔄
@@ -765,19 +850,16 @@
       </div>
     </div>
 
-    <!-- Shutter & Trigger Bar -->
+    <!-- Shutter Bar -->
     <div class="shutter-bar">
-      <!-- Nút Chụp bằng Camera Gốc iPhone (Full Resolution) -->
       <label for="nativeFileInput" class="btn-native-file" title="Dùng Camera gốc iPhone để có độ nét tối đa">
         <span class="icon">📷</span>
         <span>Chụp Nét Cao</span>
       </label>
       <input type="file" id="nativeFileInput" accept="image/*" capture="environment">
 
-      <!-- Nút Chụp Trực Tiếp -->
-      <button class="btn-shutter" id="btnCapture" title="Chụp nhanh"></button>
+      <button class="btn-shutter" id="btnCapture" title="Chụp"></button>
 
-      <!-- Xem Bộ Sưu Tập -->
       <div class="gallery-preview-btn" id="btnOpenGallery" title="Xem ảnh đã chụp">
         <span id="galleryEmptyIcon">🖼️</span>
         <img id="lastCapturedThumb" style="display: none;" alt="Thumb">
@@ -785,7 +867,7 @@
       </div>
     </div>
 
-    <!-- Tùy Chọn Cài Đặt Tối Giản -->
+    <!-- Tùy Chọn Cài Đặt -->
     <div class="control-card">
       <div class="collapsible-header" id="settingsToggle">
         <span>CÀI ĐẶT CON DẤU</span>
@@ -794,7 +876,7 @@
 
       <div class="settings-grid" id="settingsContent">
         <div class="input-group">
-          <label>Vị trí</label>
+          <label>Vị trí (Chế độ đơn)</label>
           <select id="posSelect">
             <option value="top-left" selected>Góc Trên - Trái</option>
             <option value="top-right">Góc Trên - Phải</option>
@@ -813,7 +895,7 @@
         </div>
 
         <div class="input-group">
-          <label>Định dạng số (Số 0 đệm)</label>
+          <label>Định dạng số</label>
           <select id="padSelect">
             <option value="4" selected>4 chữ số (0001)</option>
             <option value="3">3 chữ số (001)</option>
@@ -826,14 +908,14 @@
           <label>Cỡ chữ</label>
           <select id="fontSizeSelect">
             <option value="small">Nhỏ gọn (Gọn gàng)</option>
-            <option value="normal">Vừa phải</option>
-            <option value="large" selected>To rõ ràng</option>
+            <option value="normal" selected>Vừa phải</option>
+            <option value="large">To rõ ràng</option>
             <option value="xlarge">Cực đại</option>
           </select>
         </div>
 
         <div class="toggle-group">
-          <span>Tự động tăng STT (+1) sau khi chụp</span>
+          <span>Tự động tăng STT sau khi chụp</span>
           <label class="switch">
             <input type="checkbox" id="autoIncSwitch" checked>
             <span class="slider"></span>
@@ -859,15 +941,37 @@
     </div>
   </main>
 
-  <!-- Modal Xem Lại & Lưu Ảnh -->
+  <!-- 🎯 MODAL GHIM NHIỀU SẢN PHẨM TRÊN 1 HÌNH (PIN EDITOR) -->
+  <div class="modal-backdrop" id="pinEditorModal">
+    <div class="modal-header">
+      <h3 style="font-size: 1rem; font-weight: 600; color: #fff;">Chạm vào từng SP để ghim mã</h3>
+      <button class="btn-icon-glass" id="btnCancelPinEditor">✕</button>
+    </div>
+
+    <div class="editor-container" id="editorContainer">
+      <img id="editorImage" src="" alt="Editor Base">
+      <div class="pin-layer" id="pinLayer"></div>
+    </div>
+
+    <div class="editor-toolbar">
+      <span>Đã ghim: <b id="pinCountText" style="color: #60a5fa;">0</b> sản phẩm</span>
+      <button style="background: none; border: none; color: #f87171; font-weight: 600; cursor: pointer;" id="btnUndoPin">↩ Hoàn tác</button>
+    </div>
+
+    <div class="modal-footer" style="margin-top: 4px;">
+      <button class="btn btn-main" id="btnFinishPinning">✓ Hoàn tất & Đóng dấu</button>
+    </div>
+  </div>
+
+  <!-- Modal Xem Lại & Lưu Ảnh Đã Đóng Dấu -->
   <div class="modal-backdrop" id="previewModal">
     <div class="modal-header">
-      <h3 style="font-size: 1rem; font-weight: 600; color: #fff;">Ảnh vừa chụp</h3>
+      <h3 style="font-size: 1rem; font-weight: 600; color: #fff;">Ảnh Đã Đóng Dấu</h3>
       <button class="btn-icon-glass" id="btnClosePreview">✕</button>
     </div>
     <div class="modal-body">
-      <img id="previewModalImg" src="" alt="Ảnh đóng dấu">
-      <div class="photo-hint">
+      <img id="previewModalImg" src="" alt="Ảnh đóng dấu" style="max-width: 100%; max-height: 56vh; border-radius: 14px; border: 1px solid var(--card-border); object-fit: contain;">
+      <div style="margin-top: 8px; font-size: 0.75rem; color: #71717a; background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 20px;">
         💡 <span>Chạm & Giữ ảnh để chọn "Lưu vào Ảnh"</span>
       </div>
     </div>
@@ -910,13 +1014,19 @@
 
   <script>
     const state = {
+      mode: 'single', // 'single' hoặc 'multi'
       stream: null,
       facingMode: 'environment',
       capturedPhotos: [],
       currentPhotoDataUrl: null,
-      currentPhotoCode: ''
+      currentPhotoCode: '',
+      rawPhotoImg: null, // Ảnh gốc đang chỉnh sửa ghim
+      pins: [] // Danh sách ghim [{ xPercent, yPercent, code }]
     };
 
+    // DOM Elements
+    const tabSingleMode = document.getElementById('tabSingleMode');
+    const tabMultiMode = document.getElementById('tabMultiMode');
     const video = document.getElementById('videoPreview');
     const prefixInput = document.getElementById('prefixInput');
     const seqInput = document.getElementById('seqInput');
@@ -928,6 +1038,7 @@
     const overlayStampNote = document.getElementById('overlayStampNote');
     const overlayStampDate = document.getElementById('overlayStampDate');
     const liveStamp = document.getElementById('liveStamp');
+    const multiModeIndicator = document.getElementById('multiModeIndicator');
     const posSelect = document.getElementById('posSelect');
     const styleSelect = document.getElementById('styleSelect');
     const padSelect = document.getElementById('padSelect');
@@ -941,6 +1052,16 @@
     const flashLayer = document.getElementById('flashLayer');
     const cameraStatusBadge = document.getElementById('cameraStatusBadge');
 
+    // Pin Editor
+    const pinEditorModal = document.getElementById('pinEditorModal');
+    const editorImage = document.getElementById('editorImage');
+    const pinLayer = document.getElementById('pinLayer');
+    const pinCountText = document.getElementById('pinCountText');
+    const btnUndoPin = document.getElementById('btnUndoPin');
+    const btnFinishPinning = document.getElementById('btnFinishPinning');
+    const btnCancelPinEditor = document.getElementById('btnCancelPinEditor');
+
+    // Modals
     const previewModal = document.getElementById('previewModal');
     const previewModalImg = document.getElementById('previewModalImg');
     const btnClosePreview = document.getElementById('btnClosePreview');
@@ -963,6 +1084,27 @@
     const canvas = document.getElementById('stampCanvas');
     const ctx = canvas.getContext('2d');
 
+    // Mode Switch
+    tabSingleMode.addEventListener('click', () => setMode('single'));
+    tabMultiMode.addEventListener('click', () => setMode('multi'));
+
+    function setMode(mode) {
+      state.mode = mode;
+      if (mode === 'single') {
+        tabSingleMode.classList.add('active');
+        tabMultiMode.classList.remove('active');
+        liveStamp.style.display = 'inline-flex';
+        multiModeIndicator.style.display = 'none';
+      } else {
+        tabMultiMode.classList.add('active');
+        tabSingleMode.classList.remove('active');
+        liveStamp.style.display = 'none';
+        multiModeIndicator.style.display = 'flex';
+        showToast('Chế độ Đa Sản Phẩm: Chụp xong chạm vào từng món để ghim mã');
+      }
+    }
+
+    // Âm thanh
     let audioCtx = null;
     function playShutterSound() {
       if (!soundSwitch.checked) return;
@@ -983,9 +1125,9 @@
       } catch (e) {}
     }
 
-    function getFormattedCode() {
+    function getFormattedCode(customNum) {
       const prefix = prefixInput.value.trim();
-      let num = parseInt(seqInput.value, 10);
+      let num = customNum !== undefined ? customNum : parseInt(seqInput.value, 10);
       if (isNaN(num) || num < 1) num = 1;
 
       const padLen = parseInt(padSelect.value, 10);
@@ -1088,12 +1230,169 @@
       if (navigator.vibrate) navigator.vibrate(50);
     }
 
-    // Vẽ Watermark Tối Giản, Đẹp Mắt & Rõ Nét
-    function drawStampOnCanvas(sourceImgOrVideo, width, height) {
+    // 1. Chụp hình từ Camera
+    btnCapture.addEventListener('click', () => {
+      if (!video.videoWidth || !video.videoHeight) {
+        showToast('Camera chưa sẵn sàng!');
+        return;
+      }
+      triggerShutterFeedback();
+
+      // Tạo canvas tạm lấy ảnh gốc
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = video.videoWidth;
+      tempCanvas.height = video.videoHeight;
+      const tctx = tempCanvas.getContext('2d');
+      tctx.drawImage(video, 0, 0);
+
+      const rawDataUrl = tempCanvas.toDataURL('image/jpeg', 0.95);
+      handleCapturedRawPhoto(rawDataUrl, video.videoWidth, video.videoHeight);
+    });
+
+    // 2. Chụp từ Native Camera
+    nativeFileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          triggerShutterFeedback();
+          handleCapturedRawPhoto(event.target.result, img.naturalWidth, img.naturalHeight);
+          nativeFileInput.value = '';
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Xử lý ảnh gốc vừa chụp theo Chế độ Đơn hay Chế độ Đa SP
+    function handleCapturedRawPhoto(dataUrl, width, height) {
+      if (state.mode === 'single') {
+        // Chế độ 1 SP -> Vẽ góc đơn ngay
+        const img = new Image();
+        img.onload = () => {
+          drawSingleStampOnCanvas(img, width, height);
+          const finalUrl = canvas.toDataURL('image/jpeg', 0.92);
+          const code = getFormattedCode();
+          onPhotoSaved(finalUrl, code);
+        };
+        img.src = dataUrl;
+      } else {
+        // Chế độ Nhiều SP -> Mở Pin Editor
+        state.pins = [];
+        const img = new Image();
+        img.onload = () => {
+          state.rawPhotoImg = img;
+          editorImage.src = dataUrl;
+          renderPins();
+          pinEditorModal.style.display = 'flex';
+          showToast('Chạm vào sản phẩm trên ảnh để ghim mã');
+        };
+        img.src = dataUrl;
+      }
+    }
+
+    // --- 🎯 LOGIC GHIM ĐA SẢN PHẨM (PIN EDITOR) ---
+    pinLayer.addEventListener('click', (e) => {
+      const rect = editorImage.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const clickY = e.clientY - rect.top;
+
+      if (clickX < 0 || clickX > rect.width || clickY < 0 || clickY > rect.height) return;
+
+      const xPercent = (clickX / rect.width) * 100;
+      const yPercent = (clickY / rect.height) * 100;
+
+      const startSeq = parseInt(seqInput.value || 1, 10);
+      const currentPinSeq = startSeq + state.pins.length;
+      const code = getFormattedCode(currentPinSeq);
+
+      state.pins.push({ xPercent, yPercent, code, seq: currentPinSeq });
+      if (navigator.vibrate) navigator.vibrate(30);
+      renderPins();
+    });
+
+    function renderPins() {
+      pinLayer.innerHTML = '';
+      pinCountText.textContent = state.pins.length;
+
+      const rect = editorImage.getBoundingClientRect();
+      const layerRect = pinLayer.getBoundingClientRect();
+      const offsetX = rect.left - layerRect.left;
+      const offsetY = rect.top - layerRect.top;
+
+      state.pins.forEach((pin, index) => {
+        const pinEl = document.createElement('div');
+        pinEl.className = 'product-pin';
+        pinEl.style.left = `${offsetX + (pin.xPercent * rect.width) / 100}px`;
+        pinEl.style.top = `${offsetY + (pin.yPercent * rect.height) / 100}px`;
+
+        pinEl.innerHTML = `
+          <div class="pin-pill">
+            <span>${pin.code}</span>
+            <span class="pin-del-btn" title="Xóa">✕</span>
+          </div>
+          <div class="pin-pointer"></div>
+        `;
+
+        // Xóa pin cụ thể
+        pinEl.querySelector('.pin-del-btn').addEventListener('click', (ev) => {
+          ev.stopPropagation();
+          state.pins.splice(index, 1);
+          // Cập nhật lại số thứ tự liên tiếp
+          const startSeq = parseInt(seqInput.value || 1, 10);
+          state.pins.forEach((p, i) => {
+            p.seq = startSeq + i;
+            p.code = getFormattedCode(p.seq);
+          });
+          renderPins();
+        });
+
+        pinLayer.appendChild(pinEl);
+      });
+    }
+
+    // Hoàn tác ghim gần nhất
+    btnUndoPin.addEventListener('click', () => {
+      if (state.pins.length > 0) {
+        state.pins.pop();
+        renderPins();
+      }
+    });
+
+    btnCancelPinEditor.addEventListener('click', () => {
+      pinEditorModal.style.display = 'none';
+      state.pins = [];
+    });
+
+    // Hoàn tất ghim đa sản phẩm -> Vẽ lên Canvas
+    btnFinishPinning.addEventListener('click', () => {
+      if (state.pins.length === 0) {
+        showToast('Vui lòng chạm ghim ít nhất 1 sản phẩm!');
+        return;
+      }
+
+      drawMultiPinsOnCanvas(state.rawPhotoImg, state.rawPhotoImg.naturalWidth, state.rawPhotoImg.naturalHeight, state.pins);
+      const finalUrl = canvas.toDataURL('image/jpeg', 0.95);
+      const summaryCode = `${state.pins[0].code} - ${state.pins[state.pins.length - 1].code} (${state.pins.length} SP)`;
+
+      // Tự động nhảy STT tiếp theo
+      if (autoIncSwitch.checked) {
+        seqInput.value = state.pins[state.pins.length - 1].seq + 1;
+        updateLivePreview();
+      }
+
+      pinEditorModal.style.display = 'none';
+      onPhotoSaved(finalUrl, summaryCode);
+    });
+
+    // Vẽ Watermark Đơn (Single Stamp)
+    function drawSingleStampOnCanvas(sourceImg, width, height) {
       canvas.width = width;
       canvas.height = height;
-
-      ctx.drawImage(sourceImgOrVideo, 0, 0, width, height);
+      ctx.drawImage(sourceImg, 0, 0, width, height);
 
       const code = getFormattedCode();
       const noteText = noteInput.value.trim();
@@ -1114,10 +1413,8 @@
 
       ctx.font = `800 ${baseFontSize}px -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif`;
       const codeMetrics = ctx.measureText(code);
-
       ctx.font = `600 ${noteFontSize}px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif`;
       const noteMetrics = noteText ? ctx.measureText(noteText) : { width: 0 };
-
       ctx.font = `500 ${subFontSize}px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif`;
       const dateMetrics = dateText ? ctx.measureText(dateText) : { width: 0 };
 
@@ -1128,39 +1425,126 @@
 
       let boxX = margin;
       let boxY = margin;
+      if (pos === 'top-right') { boxX = width - badgeWidth - margin; }
+      else if (pos === 'bottom-left') { boxY = height - badgeHeight - margin; }
+      else if (pos === 'bottom-right') { boxX = width - badgeWidth - margin; boxY = height - badgeHeight - margin; }
 
-      if (pos === 'top-right') {
-        boxX = width - badgeWidth - margin;
-        boxY = margin;
-      } else if (pos === 'bottom-left') {
-        boxX = margin;
-        boxY = height - badgeHeight - margin;
-      } else if (pos === 'bottom-right') {
-        boxX = width - badgeWidth - margin;
-        boxY = height - badgeHeight - margin;
+      renderBadgeBackground(boxX, boxY, badgeWidth, badgeHeight, style, baseFontSize);
+
+      let currentY = boxY + padding * 0.75;
+      ctx.fillStyle = style === 'style-light' ? '#09090b' : '#ffffff';
+      ctx.font = `800 ${baseFontSize}px -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif`;
+      ctx.textBaseline = 'top';
+      ctx.fillText(code, boxX + padding, currentY);
+      currentY += baseFontSize + 4;
+
+      if (noteText) {
+        ctx.fillStyle = style === 'style-light' ? '#27272a' : '#e4e4e7';
+        ctx.font = `600 ${noteFontSize}px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif`;
+        ctx.fillText(noteText, boxX + padding, currentY);
+        currentY += noteFontSize + 4;
       }
 
-      // Màu sắc Minimal
-      let bgColor = 'rgba(0, 0, 0, 0.78)';
-      let borderColor = 'rgba(255, 255, 255, 0.25)';
-      let textCodeColor = '#ffffff';
-      let textNoteColor = '#e4e4e7';
-      let textDateColor = '#a1a1aa';
-
-      if (style === 'style-light') {
-        bgColor = 'rgba(255, 255, 255, 0.90)';
-        borderColor = 'rgba(0, 0, 0, 0.15)';
-        textCodeColor = '#09090b';
-        textNoteColor = '#27272a';
-        textDateColor = '#71717a';
-      } else if (style === 'style-solid-black') {
-        bgColor = '#000000';
-        borderColor = '#27272a';
-        textCodeColor = '#ffffff';
-        textNoteColor = '#d4d4d8';
-        textDateColor = '#a1a1aa';
+      if (dateText) {
+        ctx.fillStyle = style === 'style-light' ? '#71717a' : '#a1a1aa';
+        ctx.font = `500 ${subFontSize}px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif`;
+        ctx.fillText(dateText, boxX + padding, currentY);
       }
+      ctx.restore();
 
+      if (autoIncSwitch.checked) {
+        seqInput.value = parseInt(seqInput.value || 0, 10) + 1;
+        updateLivePreview();
+      }
+    }
+
+    // 🎨 Vẽ Ghim Nhiều Sản Phẩm Lên Canvas (Multi-Product Pins Rendering)
+    function drawMultiPinsOnCanvas(sourceImg, width, height, pins) {
+      canvas.width = width;
+      canvas.height = height;
+      ctx.drawImage(sourceImg, 0, 0, width, height);
+
+      const style = styleSelect.value;
+      const fontSizeMode = fontSizeSelect.value;
+
+      let pinFontSize = Math.max(24, Math.round(width * 0.032));
+      if (fontSizeMode === 'small') pinFontSize = Math.round(pinFontSize * 0.75);
+      if (fontSizeMode === 'large') pinFontSize = Math.round(pinFontSize * 1.3);
+      if (fontSizeMode === 'xlarge') pinFontSize = Math.round(pinFontSize * 1.6);
+
+      const paddingH = Math.round(pinFontSize * 0.55);
+      const paddingV = Math.round(pinFontSize * 0.35);
+      const pointerSize = Math.round(pinFontSize * 0.4);
+
+      pins.forEach(pin => {
+        const pinX = (pin.xPercent / 100) * width;
+        const pinY = (pin.yPercent / 100) * height;
+
+        ctx.font = `800 ${pinFontSize}px -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif`;
+        const textMetrics = ctx.measureText(pin.code);
+        const pillWidth = textMetrics.width + paddingH * 2;
+        const pillHeight = pinFontSize + paddingV * 2;
+
+        const boxX = pinX - pillWidth / 2;
+        const boxY = pinY - pillHeight - pointerSize;
+
+        // Vẽ Pill Background
+        ctx.save();
+        const radius = Math.round(pillHeight * 0.35);
+        ctx.beginPath();
+        ctx.moveTo(boxX + radius, boxY);
+        ctx.lineTo(boxX + pillWidth - radius, boxY);
+        ctx.quadraticCurveTo(boxX + pillWidth, boxY, boxX + pillWidth, boxY + radius);
+        ctx.lineTo(boxX + pillWidth, boxY + pillHeight - radius);
+        ctx.quadraticCurveTo(boxX + pillWidth, boxY + pillHeight, boxX + pillWidth - radius, boxY + pillHeight);
+        ctx.lineTo(boxX + radius, boxY + pillHeight);
+        ctx.quadraticCurveTo(boxX, boxY + pillHeight, boxX, boxY + pillHeight - radius);
+        ctx.lineTo(boxX, boxY + radius);
+        ctx.quadraticCurveTo(boxX, boxY, boxX + radius, boxY);
+        ctx.closePath();
+
+        // Vẽ mũi tên chỉ xuống
+        ctx.moveTo(pinX - pointerSize, boxY + pillHeight - 1);
+        ctx.lineTo(pinX, pinY);
+        ctx.lineTo(pinX + pointerSize, boxY + pillHeight - 1);
+        ctx.closePath();
+
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+        ctx.shadowBlur = 12;
+        ctx.shadowOffsetY = 4;
+
+        ctx.fillStyle = style === 'style-light' ? 'rgba(255, 255, 255, 0.95)' : 'rgba(0, 0, 0, 0.88)';
+        ctx.fill();
+
+        ctx.shadowColor = 'transparent';
+        ctx.lineWidth = Math.max(1.5, Math.round(pinFontSize * 0.05));
+        ctx.strokeStyle = style === 'style-light' ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.3)';
+        ctx.stroke();
+
+        // Text
+        ctx.fillStyle = style === 'style-light' ? '#000000' : '#ffffff';
+        ctx.textBaseline = 'top';
+        ctx.fillText(pin.code, boxX + paddingH, boxY + paddingV);
+        ctx.restore();
+      });
+
+      // Thêm Timestamp nhỏ ở góc dưới
+      if (showDateSwitch.checked) {
+        const dateText = getFormattedDateTime();
+        const dateFont = Math.max(14, Math.round(width * 0.018));
+        ctx.save();
+        ctx.font = `600 ${dateFont}px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif`;
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        const dMetric = ctx.measureText(dateText);
+        ctx.fillRect(16, height - dateFont * 2 - 16, dMetric.width + 16, dateFont * 2);
+        ctx.fillStyle = '#fff';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(dateText, 24, height - dateFont - 16);
+        ctx.restore();
+      }
+    }
+
+    function renderBadgeBackground(boxX, boxY, badgeWidth, badgeHeight, style, baseFontSize) {
       const radius = Math.round(baseFontSize * 0.3);
       ctx.save();
       ctx.beginPath();
@@ -1177,8 +1561,17 @@
 
       ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
       ctx.shadowBlur = 12;
-      ctx.shadowOffsetX = 0;
       ctx.shadowOffsetY = 4;
+
+      let bgColor = 'rgba(0, 0, 0, 0.78)';
+      let borderColor = 'rgba(255, 255, 255, 0.25)';
+      if (style === 'style-light') {
+        bgColor = 'rgba(255, 255, 255, 0.90)';
+        borderColor = 'rgba(0, 0, 0, 0.15)';
+      } else if (style === 'style-solid-black') {
+        bgColor = '#000000';
+        borderColor = '#27272a';
+      }
 
       ctx.fillStyle = bgColor;
       ctx.fill();
@@ -1187,32 +1580,9 @@
       ctx.lineWidth = Math.max(1.5, Math.round(baseFontSize * 0.04));
       ctx.strokeStyle = borderColor;
       ctx.stroke();
-
-      let currentY = boxY + padding * 0.75;
-
-      ctx.fillStyle = textCodeColor;
-      ctx.font = `800 ${baseFontSize}px -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif`;
-      ctx.textBaseline = 'top';
-      ctx.fillText(code, boxX + padding, currentY);
-      currentY += baseFontSize + 4;
-
-      if (noteText) {
-        ctx.fillStyle = textNoteColor;
-        ctx.font = `600 ${noteFontSize}px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif`;
-        ctx.fillText(noteText, boxX + padding, currentY);
-        currentY += noteFontSize + 4;
-      }
-
-      if (dateText) {
-        ctx.fillStyle = textDateColor;
-        ctx.font = `500 ${subFontSize}px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif`;
-        ctx.fillText(dateText, boxX + padding, currentY);
-      }
-
-      ctx.restore();
     }
 
-    function onPhotoProcessed(dataUrl, code) {
+    function onPhotoSaved(dataUrl, code) {
       state.currentPhotoDataUrl = dataUrl;
       state.currentPhotoCode = code;
 
@@ -1224,60 +1594,20 @@
       galleryCount.textContent = state.capturedPhotos.length;
       galleryCount.style.display = 'block';
 
-      if (autoIncSwitch.checked) {
-        seqInput.value = parseInt(seqInput.value || 0, 10) + 1;
-        updateLivePreview();
-      }
-
       previewModalImg.src = dataUrl;
       previewModal.style.display = 'flex';
-      showToast(`Đã đóng dấu: ${code}`);
+      showToast(`Đã lưu ảnh: ${code}`);
     }
-
-    btnCapture.addEventListener('click', () => {
-      if (!video.videoWidth || !video.videoHeight) {
-        showToast('Camera chưa sẵn sàng!');
-        return;
-      }
-      triggerShutterFeedback();
-      const code = getFormattedCode();
-      drawStampOnCanvas(video, video.videoWidth, video.videoHeight);
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
-      onPhotoProcessed(dataUrl, code);
-    });
-
-    nativeFileInput.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      const code = getFormattedCode();
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const img = new Image();
-        img.onload = () => {
-          triggerShutterFeedback();
-          drawStampOnCanvas(img, img.naturalWidth, img.naturalHeight);
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
-          onPhotoProcessed(dataUrl, code);
-          nativeFileInput.value = '';
-        };
-        img.src = event.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
 
     async function saveImageToIPhonePhotos() {
       if (!state.currentPhotoDataUrl) return;
       try {
         const res = await fetch(state.currentPhotoDataUrl);
         const blob = await res.blob();
-        const file = new File([blob], `${state.currentPhotoCode}.jpg`, { type: 'image/jpeg' });
+        const file = new File([blob], `${state.currentPhotoCode.replace(/[^a-zA-Z0-9_-]/g, '_')}.jpg`, { type: 'image/jpeg' });
 
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          await navigator.share({
-            files: [file],
-            title: state.currentPhotoCode
-          });
+          await navigator.share({ files: [file], title: state.currentPhotoCode });
         } else {
           btnDownloadSingle.click();
         }
@@ -1291,7 +1621,7 @@
     btnDownloadSingle.addEventListener('click', () => {
       if (!state.currentPhotoDataUrl) return;
       const link = document.createElement('a');
-      link.download = `${state.currentPhotoCode}_${Date.now()}.jpg`;
+      link.download = `${state.currentPhotoCode.replace(/[^a-zA-Z0-9_-]/g, '_')}_${Date.now()}.jpg`;
       link.href = state.currentPhotoDataUrl;
       link.click();
       showToast('Đã tải ảnh về máy!');
@@ -1305,10 +1635,8 @@
         showToast('Chưa có ảnh nào được chụp!');
         return;
       }
-
       modalGalleryCount.textContent = state.capturedPhotos.length;
       galleryGrid.innerHTML = '';
-
       state.capturedPhotos.forEach((item) => {
         const div = document.createElement('div');
         div.className = 'gallery-item';
@@ -1325,7 +1653,6 @@
         });
         galleryGrid.appendChild(div);
       });
-
       galleryModal.style.display = 'flex';
     });
 
@@ -1344,16 +1671,13 @@
 
     btnDownloadZip.addEventListener('click', async () => {
       if (state.capturedPhotos.length === 0) return;
-
       showToast('Đang đóng gói file ZIP...');
       const zip = new JSZip();
       const folder = zip.folder("photos");
-
       state.capturedPhotos.forEach((item, index) => {
         const base64Data = item.dataUrl.replace(/^data:image\/jpeg;base64,/, "");
-        folder.file(`${item.code}_${index + 1}.jpg`, base64Data, { base64: true });
+        folder.file(`${item.code.replace(/[^a-zA-Z0-9_-]/g, '_')}_${index + 1}.jpg`, base64Data, { base64: true });
       });
-
       const content = await zip.generateAsync({ type: "blob" });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(content);
