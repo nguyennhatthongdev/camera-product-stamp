@@ -3,7 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Chụp Ảnh Sản Phẩm & Đóng Dấu STT</title>
+  <title>Chụp Ảnh Sản Phẩm & Đóng Dấu STT - StampCam Pro</title>
+
+  <!-- PWA & iOS Safari Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="StampCam">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="manifest" href="manifest.json">
+
+  <!-- JSZip for Bulk Download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
   <style>
     :root {
       --primary: #3b82f6;
@@ -177,12 +188,12 @@
 
     .preview-code {
       font-family: monospace;
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       font-weight: 800;
       color: #fbbf24;
       background: #000;
-      padding: 2px 8px;
-      border-radius: 4px;
+      padding: 3px 10px;
+      border-radius: 6px;
       letter-spacing: 1px;
     }
 
@@ -213,6 +224,7 @@
       pointer-events: none;
       z-index: 10;
       transition: all 0.2s ease;
+      max-width: 85%;
     }
 
     /* Positions */
@@ -225,10 +237,10 @@
     .stamp-badge {
       display: inline-flex;
       flex-direction: column;
-      padding: 6px 14px;
-      border-radius: 10px;
+      padding: 8px 16px;
+      border-radius: 12px;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.65);
       line-height: 1.2;
     }
 
@@ -238,15 +250,17 @@
       border: 2px solid #000;
     }
     .style-yellow .stamp-num { color: #000; }
-    .style-yellow .stamp-sub { color: #333; }
+    .style-yellow .stamp-sub { color: #262626; }
+    .style-yellow .stamp-note { color: #1e3a8a; }
 
     .style-black {
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0, 0, 0, 0.88);
       color: #ffffff;
       border: 2px solid #38bdf8;
     }
-    .style-black .stamp-num { color: #38bdf8; text-shadow: 0 0 6px rgba(56, 189, 248, 0.6); }
+    .style-black .stamp-num { color: #38bdf8; text-shadow: 0 0 8px rgba(56, 189, 248, 0.6); }
     .style-black .stamp-sub { color: #cbd5e1; }
+    .style-black .stamp-note { color: #facc15; }
 
     .style-red {
       background: #dc2626;
@@ -255,20 +269,27 @@
     }
     .style-red .stamp-num { color: #ffffff; }
     .style-red .stamp-sub { color: #fecaca; }
+    .style-red .stamp-note { color: #fef08a; }
 
     .stamp-num {
-      font-size: 1.25rem;
+      font-size: 1.35rem;
       font-weight: 900;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.8px;
+    }
+
+    .stamp-note {
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-top: 2px;
     }
 
     .stamp-sub {
       font-size: 0.68rem;
       font-weight: 600;
-      margin-top: 1px;
+      margin-top: 2px;
     }
 
-    /* Camera Switch & Flash Button */
+    /* Camera Switch Button */
     .camera-top-actions {
       position: absolute;
       top: 12px;
@@ -284,14 +305,14 @@
       -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 255, 255, 0.2);
       color: #fff;
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       transition: transform 0.1s;
     }
 
@@ -324,13 +345,13 @@
     }
 
     .btn-native-file span.icon {
-      font-size: 1.3rem;
+      font-size: 1.35rem;
       color: #38bdf8;
     }
 
     .btn-shutter {
-      width: 76px;
-      height: 76px;
+      width: 78px;
+      height: 78px;
       border-radius: 50%;
       background: #ffffff;
       border: 5px solid rgba(255, 255, 255, 0.3);
@@ -346,8 +367,8 @@
 
     .btn-shutter::after {
       content: '';
-      width: 58px;
-      height: 58px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       background: #ffffff;
       border: 2px solid #0f172a;
@@ -364,8 +385,8 @@
     }
 
     .gallery-preview-btn {
-      width: 50px;
-      height: 50px;
+      width: 52px;
+      height: 52px;
       border-radius: 12px;
       background: var(--surface);
       border: 2px solid var(--border);
@@ -375,7 +396,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
     }
 
     .gallery-preview-btn img {
@@ -392,7 +413,7 @@
       color: #fff;
       font-size: 0.65rem;
       font-weight: 700;
-      padding: 1px 5px;
+      padding: 2px 6px;
       border-radius: 999px;
       border: 2px solid var(--bg);
     }
@@ -479,9 +500,9 @@
     .modal-backdrop {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       z-index: 100;
       display: none;
       flex-direction: column;
@@ -528,7 +549,7 @@
       flex: 1;
       padding: 12px;
       border-radius: 12px;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 700;
       border: none;
       cursor: pointer;
@@ -579,7 +600,7 @@
       bottom: 2px;
       left: 2px;
       right: 2px;
-      background: rgba(0,0,0,0.75);
+      background: rgba(0,0,0,0.8);
       color: #fbbf24;
       font-size: 0.65rem;
       font-weight: bold;
@@ -599,14 +620,13 @@
       opacity: 0;
       pointer-events: none;
       z-index: 30;
-      transition: opacity 0.05s ease-out;
+      transition: opacity 0.06s ease-out;
     }
 
     .flash-anim.active {
-      opacity: 0.9;
+      opacity: 0.95;
     }
 
-    /* Hidden File Input for Native iPhone Camera */
     #nativeFileInput {
       display: none;
     }
@@ -649,7 +669,7 @@
         <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
         <circle cx="12" cy="13" r="4"></circle>
       </svg>
-      <span>STAMP CAM PRO</span>
+      <span>STAMPCAM PRO</span>
     </div>
     <div class="header-badge" id="cameraStatusBadge">Đang khởi động...</div>
   </header>
@@ -660,7 +680,7 @@
       <div class="card-row">
         <div class="input-group" style="flex: 1.1;">
           <label>Tiền tố (Mã)</label>
-          <input type="text" id="prefixInput" value="SP-" placeholder="VD: SP-, MS-, VAI-">
+          <input type="text" id="prefixInput" value="SP-" placeholder="VD: SP-, MS-">
         </div>
         <div class="input-group" style="flex: 1.8;">
           <label>Số thứ tự (STT)</label>
@@ -672,8 +692,13 @@
         </div>
       </div>
 
+      <div class="input-group" style="margin-top: 10px;">
+        <label>Ghi chú / Tên SP (Tùy chọn)</label>
+        <input type="text" id="noteInput" placeholder="VD: Áo thun trắng - Size L">
+      </div>
+
       <div class="quick-preview-tag">
-        <span style="color: var(--text-muted);">Mã sẽ đóng dấu:</span>
+        <span style="color: var(--text-muted);">Mẫu con dấu:</span>
         <span class="preview-code" id="previewCodeText">SP-0001</span>
       </div>
     </div>
@@ -688,6 +713,7 @@
       <div class="stamp-overlay pos-top-left style-yellow" id="liveStamp">
         <div class="stamp-badge">
           <span class="stamp-num" id="overlayStampNum">SP-0001</span>
+          <span class="stamp-note" id="overlayStampNote" style="display: none;"></span>
           <span class="stamp-sub" id="overlayStampDate"></span>
         </div>
       </div>
@@ -702,14 +728,14 @@
 
     <!-- Shutter & Trigger Bar -->
     <div class="shutter-bar">
-      <!-- Nút Chụp bằng Camera Gốc iPhone (Độ nét cao nhất / Full Resolution 12MP/48MP) -->
+      <!-- Nút Chụp bằng Camera Gốc iPhone (Full Resolution 12MP/48MP) -->
       <label for="nativeFileInput" class="btn-native-file" title="Dùng Camera gốc iPhone để có độ nét tối đa">
         <span class="icon">📷</span>
         <span>Chụp Nét Cao</span>
       </label>
       <input type="file" id="nativeFileInput" accept="image/*" capture="environment">
 
-      <!-- Nút Chụp Trực Tiếp (Live WebRTC) -->
+      <!-- Nút Chụp Trực Tiếp -->
       <button class="btn-shutter" id="btnCapture" title="Chụp nhanh"></button>
 
       <!-- Xem Bộ Sưu Tập -->
@@ -720,7 +746,7 @@
       </div>
     </div>
 
-    <!-- Tùy Chọn Cài Đặt (Vị trí, Màu sắc, Tự động tăng STT) -->
+    <!-- Tùy Chọn Cài Đặt -->
     <div class="control-card">
       <div class="collapsible-header" id="settingsToggle">
         <span>⚙️ TÙY CHỌN ĐÓNG DẤU</span>
@@ -781,6 +807,14 @@
             <span class="slider"></span>
           </label>
         </div>
+
+        <div class="toggle-group">
+          <span>Âm thanh khi chụp</span>
+          <label class="switch">
+            <input type="checkbox" id="soundSwitch" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
       </div>
     </div>
   </main>
@@ -801,46 +835,44 @@
     </div>
   </div>
 
-  <!-- Modal Bộ Sưu Tập Ảnh Trong Phiên -->
+  <!-- Modal Bộ Sưu Tập Ảnh -->
   <div class="modal-backdrop" id="galleryModal">
     <div class="modal-header">
-      <h3 style="font-size: 1.1rem; font-weight: 700; color: #fff;">Danh Sách Ảnh Đã Chụp (<span id="modalGalleryCount">0</span>)</h3>
+      <h3 style="font-size: 1.1rem; font-weight: 700; color: #fff;">Danh Sách Ảnh (<span id="modalGalleryCount">0</span>)</h3>
       <button class="btn-icon-glass" id="btnCloseGallery">✕</button>
     </div>
     <div class="modal-body" style="justify-content: flex-start;">
       <div class="gallery-grid" id="galleryGrid"></div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-danger" id="btnClearGallery">Xóa tất cả</button>
-      <button class="btn btn-success" id="btnDownloadAll">Tải tất cả</button>
+    <div class="modal-footer" style="flex-direction: column;">
+      <div style="display: flex; gap: 8px; width: 100%;">
+        <button class="btn btn-danger" id="btnClearGallery">Xóa tất cả</button>
+        <button class="btn btn-success" id="btnDownloadZip">📦 Tải file ZIP</button>
+      </div>
     </div>
   </div>
 
-  <!-- Hidden Canvas for Image Processing -->
   <canvas id="stampCanvas" style="display: none;"></canvas>
-
-  <!-- Toast -->
   <div class="toast" id="toastMsg">Thông báo</div>
 
   <script>
-    // State
     const state = {
       stream: null,
-      facingMode: 'environment', // Camera sau (iPhone)
+      facingMode: 'environment',
       capturedPhotos: [],
-      currentPhotoBlob: null,
       currentPhotoDataUrl: null,
       currentPhotoCode: ''
     };
 
-    // Elements
     const video = document.getElementById('videoPreview');
     const prefixInput = document.getElementById('prefixInput');
     const seqInput = document.getElementById('seqInput');
+    const noteInput = document.getElementById('noteInput');
     const btnInc = document.getElementById('btnInc');
     const btnDec = document.getElementById('btnDec');
     const previewCodeText = document.getElementById('previewCodeText');
     const overlayStampNum = document.getElementById('overlayStampNum');
+    const overlayStampNote = document.getElementById('overlayStampNote');
     const overlayStampDate = document.getElementById('overlayStampDate');
     const liveStamp = document.getElementById('liveStamp');
     const posSelect = document.getElementById('posSelect');
@@ -849,13 +881,13 @@
     const fontSizeSelect = document.getElementById('fontSizeSelect');
     const autoIncSwitch = document.getElementById('autoIncSwitch');
     const showDateSwitch = document.getElementById('showDateSwitch');
+    const soundSwitch = document.getElementById('soundSwitch');
     const btnCapture = document.getElementById('btnCapture');
     const nativeFileInput = document.getElementById('nativeFileInput');
     const btnSwitchCam = document.getElementById('btnSwitchCam');
     const flashLayer = document.getElementById('flashLayer');
     const cameraStatusBadge = document.getElementById('cameraStatusBadge');
 
-    // Modals
     const previewModal = document.getElementById('previewModal');
     const previewModalImg = document.getElementById('previewModalImg');
     const btnClosePreview = document.getElementById('btnClosePreview');
@@ -872,13 +904,33 @@
     const galleryCount = document.getElementById('galleryCount');
     const modalGalleryCount = document.getElementById('modalGalleryCount');
     const btnClearGallery = document.getElementById('btnClearGallery');
-    const btnDownloadAll = document.getElementById('btnDownloadAll');
+    const btnDownloadZip = document.getElementById('btnDownloadZip');
 
     const toastMsg = document.getElementById('toastMsg');
     const canvas = document.getElementById('stampCanvas');
     const ctx = canvas.getContext('2d');
 
-    // Format mã STT
+    // Âm thanh chụp bằng Web Audio API
+    let audioCtx = null;
+    function playShutterSound() {
+      if (!soundSwitch.checked) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.08);
+      } catch (e) {}
+    }
+
     function getFormattedCode() {
       const prefix = prefixInput.value.trim();
       let num = parseInt(seqInput.value, 10);
@@ -886,9 +938,7 @@
 
       const padLen = parseInt(padSelect.value, 10);
       let numStr = num.toString();
-      if (padLen > 0) {
-        numStr = numStr.padStart(padLen, '0');
-      }
+      if (padLen > 0) numStr = numStr.padStart(padLen, '0');
       return `${prefix}${numStr}`;
     }
 
@@ -905,8 +955,17 @@
 
     function updateLivePreview() {
       const code = getFormattedCode();
-      previewCodeText.textContent = code;
+      const note = noteInput.value.trim();
+
+      previewCodeText.textContent = note ? `${code} - ${note}` : code;
       overlayStampNum.textContent = code;
+
+      if (note) {
+        overlayStampNote.textContent = note;
+        overlayStampNote.style.display = 'block';
+      } else {
+        overlayStampNote.style.display = 'none';
+      }
 
       if (showDateSwitch.checked) {
         overlayStampDate.textContent = getFormattedDateTime();
@@ -915,41 +974,26 @@
         overlayStampDate.style.display = 'none';
       }
 
-      // Update position classes
       liveStamp.className = `stamp-overlay pos-${posSelect.value} ${styleSelect.value}`;
     }
 
-    // Update datetime on live view every second
     setInterval(() => {
-      if (showDateSwitch.checked) {
-        overlayStampDate.textContent = getFormattedDateTime();
-      }
+      if (showDateSwitch.checked) overlayStampDate.textContent = getFormattedDateTime();
     }, 1000);
 
-    // Toast
     function showToast(msg) {
       toastMsg.textContent = msg;
       toastMsg.classList.add('show');
-      setTimeout(() => {
-        toastMsg.classList.remove('show');
-      }, 2500);
+      setTimeout(() => toastMsg.classList.remove('show'), 2500);
     }
 
-    // Camera Init (WebRTC)
     async function startCamera() {
       try {
-        if (state.stream) {
-          state.stream.getTracks().forEach(track => track.stop());
-        }
-
+        if (state.stream) state.stream.getTracks().forEach(t => t.stop());
         cameraStatusBadge.textContent = 'Đang mở cam...';
 
         const constraints = {
-          video: {
-            facingMode: state.facingMode,
-            width: { ideal: 1920 },
-            height: { ideal: 1080 }
-          },
+          video: { facingMode: state.facingMode, width: { ideal: 1920 }, height: { ideal: 1080 } },
           audio: false
         };
 
@@ -959,20 +1003,16 @@
         cameraStatusBadge.textContent = state.facingMode === 'environment' ? 'Camera Sau' : 'Camera Trước';
         cameraStatusBadge.style.color = '#38bdf8';
       } catch (err) {
-        console.warn('Lỗi mở camera:', err);
         cameraStatusBadge.textContent = 'Chế độ Chụp File';
         cameraStatusBadge.style.color = '#fbbf24';
-        showToast('Không mở được camera trực tiếp. Bạn có thể dùng nút "Chụp Nét Cao"');
       }
     }
 
-    // Chuyển camera trước/sau
     btnSwitchCam.addEventListener('click', () => {
       state.facingMode = state.facingMode === 'environment' ? 'user' : 'environment';
       startCamera();
     });
 
-    // Tăng giảm STT
     btnInc.addEventListener('click', () => {
       seqInput.value = parseInt(seqInput.value || 0, 10) + 1;
       updateLivePreview();
@@ -986,54 +1026,54 @@
       }
     });
 
-    [prefixInput, seqInput, posSelect, styleSelect, padSelect, fontSizeSelect, showDateSwitch].forEach(el => {
+    [prefixInput, seqInput, noteInput, posSelect, styleSelect, padSelect, fontSizeSelect, showDateSwitch].forEach(el => {
       el.addEventListener('input', updateLivePreview);
       el.addEventListener('change', updateLivePreview);
     });
 
-    // Trigger Shutter Flash & Vibrate
     function triggerShutterFeedback() {
+      playShutterSound();
       flashLayer.classList.add('active');
       setTimeout(() => flashLayer.classList.remove('active'), 100);
-      if (navigator.vibrate) {
-        navigator.vibrate(50);
-      }
+      if (navigator.vibrate) navigator.vibrate(60);
     }
 
-    // Vẽ Watermark lên Canvas với độ nét cao
     function drawStampOnCanvas(sourceImgOrVideo, width, height) {
       canvas.width = width;
       canvas.height = height;
 
-      // Vẽ hình ảnh gốc
       ctx.drawImage(sourceImgOrVideo, 0, 0, width, height);
 
       const code = getFormattedCode();
+      const noteText = noteInput.value.trim();
       const dateText = showDateSwitch.checked ? getFormattedDateTime() : '';
       const pos = posSelect.value;
       const style = styleSelect.value;
       const fontSizeMode = fontSizeSelect.value;
 
-      // Tính kích thước chữ dựa trên tỷ lệ ảnh gốc (Dynamic scaling)
-      let baseFontSize = Math.max(28, Math.round(width * 0.042));
+      let baseFontSize = Math.max(32, Math.round(width * 0.045));
       if (fontSizeMode === 'large') baseFontSize = Math.round(baseFontSize * 1.35);
       if (fontSizeMode === 'xlarge') baseFontSize = Math.round(baseFontSize * 1.8);
 
-      const subFontSize = Math.max(14, Math.round(baseFontSize * 0.45));
+      const noteFontSize = Math.max(18, Math.round(baseFontSize * 0.55));
+      const subFontSize = Math.max(14, Math.round(baseFontSize * 0.42));
       const padding = Math.round(baseFontSize * 0.45);
       const margin = Math.round(width * 0.035);
 
-      // Thiết lập font chữ
       ctx.font = `900 ${baseFontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
       const codeMetrics = ctx.measureText(code);
-      
+
+      ctx.font = `700 ${noteFontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
+      const noteMetrics = noteText ? ctx.measureText(noteText) : { width: 0 };
+
       ctx.font = `600 ${subFontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
       const dateMetrics = dateText ? ctx.measureText(dateText) : { width: 0 };
 
-      const badgeWidth = Math.max(codeMetrics.width, dateMetrics.width) + padding * 2.2;
-      const badgeHeight = (dateText ? (baseFontSize + subFontSize + padding * 1.8) : (baseFontSize + padding * 1.4));
+      const badgeWidth = Math.max(codeMetrics.width, noteMetrics.width, dateMetrics.width) + padding * 2.2;
+      let badgeHeight = baseFontSize + padding * 1.4;
+      if (noteText) badgeHeight += noteFontSize + 6;
+      if (dateText) badgeHeight += subFontSize + 6;
 
-      // Tính toạ độ X, Y theo vị trí được chọn
       let boxX = margin;
       let boxY = margin;
 
@@ -1048,25 +1088,26 @@
         boxY = height - badgeHeight - margin;
       }
 
-      // Màu sắc theo Style
-      let bgColor = 'rgba(0, 0, 0, 0.85)';
+      let bgColor = 'rgba(0, 0, 0, 0.88)';
       let borderColor = '#38bdf8';
       let textCodeColor = '#38bdf8';
+      let textNoteColor = '#facc15';
       let textDateColor = '#cbd5e1';
 
       if (style === 'style-yellow') {
         bgColor = '#fbbf24';
         borderColor = '#000000';
         textCodeColor = '#000000';
-        textDateColor = '#1f2937';
+        textNoteColor = '#1e3a8a';
+        textDateColor = '#262626';
       } else if (style === 'style-red') {
         bgColor = '#dc2626';
         borderColor = '#ffffff';
         textCodeColor = '#ffffff';
+        textNoteColor = '#fef08a';
         textDateColor = '#fecaca';
       }
 
-      // Vẽ bo góc nền badge (Rounded Rect)
       const radius = Math.round(baseFontSize * 0.35);
       ctx.save();
       ctx.beginPath();
@@ -1081,85 +1122,77 @@
       ctx.quadraticCurveTo(boxX, boxY, boxX + radius, boxY);
       ctx.closePath();
 
-      // Shadow
       ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
-      ctx.shadowBlur = 15;
+      ctx.shadowBlur = 18;
       ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 4;
+      ctx.shadowOffsetY = 5;
 
       ctx.fillStyle = bgColor;
       ctx.fill();
 
-      // Border
       ctx.shadowColor = 'transparent';
       ctx.lineWidth = Math.max(3, Math.round(baseFontSize * 0.08));
       ctx.strokeStyle = borderColor;
       ctx.stroke();
 
-      // In Text Mã STT
+      let currentY = boxY + padding * 0.8;
+
       ctx.fillStyle = textCodeColor;
       ctx.font = `900 ${baseFontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
       ctx.textBaseline = 'top';
-      ctx.fillText(code, boxX + padding, boxY + padding * 0.8);
+      ctx.fillText(code, boxX + padding, currentY);
+      currentY += baseFontSize + 4;
 
-      // In Text Ngày Giờ nếu có
+      if (noteText) {
+        ctx.fillStyle = textNoteColor;
+        ctx.font = `700 ${noteFontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
+        ctx.fillText(noteText, boxX + padding, currentY);
+        currentY += noteFontSize + 4;
+      }
+
       if (dateText) {
         ctx.fillStyle = textDateColor;
         ctx.font = `600 ${subFontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
-        ctx.fillText(dateText, boxX + padding, boxY + padding * 0.8 + baseFontSize + 4);
+        ctx.fillText(dateText, boxX + padding, currentY);
       }
 
       ctx.restore();
     }
 
-    // Xử lý sau khi chụp ảnh thành công
     function onPhotoProcessed(dataUrl, code) {
       state.currentPhotoDataUrl = dataUrl;
       state.currentPhotoCode = code;
 
-      // Thêm vào danh sách bộ sưu tập
-      state.capturedPhotos.unshift({
-        dataUrl,
-        code,
-        timestamp: Date.now()
-      });
+      state.capturedPhotos.unshift({ dataUrl, code, timestamp: Date.now() });
 
-      // Cập nhật thumbnail & count
       lastCapturedThumb.src = dataUrl;
       lastCapturedThumb.style.display = 'block';
       galleryEmptyIcon.style.display = 'none';
       galleryCount.textContent = state.capturedPhotos.length;
       galleryCount.style.display = 'block';
 
-      // Tự động tăng STT nếu bật
       if (autoIncSwitch.checked) {
         seqInput.value = parseInt(seqInput.value || 0, 10) + 1;
         updateLivePreview();
       }
 
-      // Mở modal xem trước
       previewModalImg.src = dataUrl;
       previewModal.style.display = 'flex';
-      showToast(`Đã chụp & đóng dấu mã: ${code}`);
+      showToast(`Đã chụp & đóng dấu: ${code}`);
     }
 
-    // 1. Chụp từ Video WebRTC
     btnCapture.addEventListener('click', () => {
       if (!video.videoWidth || !video.videoHeight) {
         showToast('Camera chưa sẵn sàng!');
         return;
       }
-
       triggerShutterFeedback();
       const code = getFormattedCode();
-
-      // Chụp khung hình từ camera
       drawStampOnCanvas(video, video.videoWidth, video.videoHeight);
       const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
       onPhotoProcessed(dataUrl, code);
     });
 
-    // 2. Chụp từ Camera Gốc iPhone / File Input (High Resolution)
     nativeFileInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
@@ -1173,14 +1206,13 @@
           drawStampOnCanvas(img, img.naturalWidth, img.naturalHeight);
           const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
           onPhotoProcessed(dataUrl, code);
-          nativeFileInput.value = ''; // Reset
+          nativeFileInput.value = '';
         };
         img.src = event.target.result;
       };
       reader.readAsDataURL(file);
     });
 
-    // Tải ảnh đơn lẻ
     btnDownloadSingle.addEventListener('click', () => {
       if (!state.currentPhotoDataUrl) return;
       const link = document.createElement('a');
@@ -1190,10 +1222,8 @@
       showToast('Đã lưu ảnh về máy!');
     });
 
-    // Chia sẻ hoặc Lưu vào Thư viện iPhone (Web Share API)
     btnSharePhoto.addEventListener('click', async () => {
       if (!state.currentPhotoDataUrl) return;
-
       try {
         const res = await fetch(state.currentPhotoDataUrl);
         const blob = await res.blob();
@@ -1203,22 +1233,17 @@
           await navigator.share({
             files: [file],
             title: `Sản phẩm ${state.currentPhotoCode}`,
-            text: `Ảnh sản phẩm đóng dấu mã: ${state.currentPhotoCode}`
+            text: `Ảnh sản phẩm ${state.currentPhotoCode}`
           });
         } else {
-          // Fallback tải về
           btnDownloadSingle.click();
         }
-      } catch (err) {
-        console.log('Share canceled or not supported:', err);
-      }
+      } catch (err) {}
     });
 
-    // Đóng Preview Modal
     btnClosePreview.addEventListener('click', () => previewModal.style.display = 'none');
     btnRetake.addEventListener('click', () => previewModal.style.display = 'none');
 
-    // Gallery Modal
     btnOpenGallery.addEventListener('click', () => {
       if (state.capturedPhotos.length === 0) {
         showToast('Chưa có ảnh nào được chụp!');
@@ -1228,7 +1253,7 @@
       modalGalleryCount.textContent = state.capturedPhotos.length;
       galleryGrid.innerHTML = '';
 
-      state.capturedPhotos.forEach((item, index) => {
+      state.capturedPhotos.forEach((item) => {
         const div = document.createElement('div');
         div.className = 'gallery-item';
         div.innerHTML = `
@@ -1250,9 +1275,8 @@
 
     btnCloseGallery.addEventListener('click', () => galleryModal.style.display = 'none');
 
-    // Xóa bộ sưu tập
     btnClearGallery.addEventListener('click', () => {
-      if (confirm('Bạn có chắc chắn muốn xóa tất cả ảnh đã chụp trong phiên này?')) {
+      if (confirm('Bạn có chắc muốn xóa tất cả ảnh đã chụp?')) {
         state.capturedPhotos = [];
         lastCapturedThumb.style.display = 'none';
         galleryEmptyIcon.style.display = 'block';
@@ -1262,21 +1286,27 @@
       }
     });
 
-    // Tải tất cả ảnh
-    btnDownloadAll.addEventListener('click', () => {
+    // Tải tất cả ảnh dạng file ZIP
+    btnDownloadZip.addEventListener('click', async () => {
       if (state.capturedPhotos.length === 0) return;
-      state.capturedPhotos.forEach((item, i) => {
-        setTimeout(() => {
-          const link = document.createElement('a');
-          link.download = `${item.code}_${i + 1}.jpg`;
-          link.href = item.dataUrl;
-          link.click();
-        }, i * 300);
+
+      showToast('Đang đóng gói file ZIP...');
+      const zip = new JSZip();
+      const folder = zip.folder("photos");
+
+      state.capturedPhotos.forEach((item, index) => {
+        const base64Data = item.dataUrl.replace(/^data:image\/jpeg;base64,/, "");
+        folder.file(`${item.code}_${index + 1}.jpg`, base64Data, { base64: true });
       });
-      showToast(`Đang tải xuống ${state.capturedPhotos.length} ảnh...`);
+
+      const content = await zip.generateAsync({ type: "blob" });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(content);
+      link.download = `Danh_Sach_SanPham_${Date.now()}.zip`;
+      link.click();
+      showToast('Đã tải xong file ZIP!');
     });
 
-    // Toggle Settings
     const settingsToggle = document.getElementById('settingsToggle');
     const settingsContent = document.getElementById('settingsContent');
     const settingsArrow = document.getElementById('settingsArrow');
@@ -1288,7 +1318,6 @@
       settingsArrow.textContent = isSettingsOpen ? '▼' : '▶';
     });
 
-    // Init
     updateLivePreview();
     startCamera();
   </script>
