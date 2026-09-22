@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>StampCam - Chụp Ảnh & Đóng Dấu Đa Sản Phẩm</title>
+  <title>StampCam - Chụp, Đóng Dấu & Ghép Ảnh Sản Phẩm</title>
 
   <!-- PWA & iOS Safari Meta Tags -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -72,6 +72,12 @@
       color: #fff;
     }
 
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     .header-badge {
       background: rgba(255, 255, 255, 0.08);
       color: var(--text-dim);
@@ -80,6 +86,20 @@
       border-radius: 999px;
       font-weight: 500;
       border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .btn-collage-header {
+      background: rgba(37, 99, 235, 0.2);
+      color: #60a5fa;
+      border: 1px solid rgba(37, 99, 235, 0.4);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
     /* Main Container */
@@ -106,10 +126,10 @@
 
     .mode-tab {
       flex: 1;
-      padding: 9px 6px;
+      padding: 9px 4px;
       border-radius: 10px;
       text-align: center;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
       color: var(--text-dim);
@@ -235,13 +255,8 @@
       transition: aspect-ratio 0.3s ease;
     }
 
-    /* Tỷ lệ khung hình: Dọc (3/4) vs Ngang (4/3) */
-    .aspect-portrait {
-      aspect-ratio: 3 / 4;
-    }
-    .aspect-landscape {
-      aspect-ratio: 4 / 3;
-    }
+    .aspect-portrait { aspect-ratio: 3 / 4; }
+    .aspect-landscape { aspect-ratio: 4 / 3; }
 
     video {
       width: 100%;
@@ -250,7 +265,7 @@
       display: block;
     }
 
-    /* Live Stamp Overlay (Góc đơn) */
+    /* Live Stamp Overlay */
     .stamp-overlay {
       position: absolute;
       pointer-events: none;
@@ -354,14 +369,13 @@
       cursor: pointer;
       font-size: 0.85rem;
       font-weight: 600;
-      transition: transform 0.1s, background 0.2s;
+      transition: transform 0.1s;
     }
 
     .btn-icon-glass:active {
       transform: scale(0.92);
     }
 
-    /* Multi-Mode Banner on Camera */
     .multi-mode-indicator {
       position: absolute;
       top: 12px;
@@ -435,14 +449,8 @@
       transition: all 0.1s;
     }
 
-    .btn-shutter:active {
-      transform: scale(0.94);
-    }
-
-    .btn-shutter:active::after {
-      transform: scale(0.88);
-      background: #e4e4e7;
-    }
+    .btn-shutter:active { transform: scale(0.94); }
+    .btn-shutter:active::after { transform: scale(0.88); background: #e4e4e7; }
 
     .gallery-preview-btn {
       width: 48px;
@@ -522,11 +530,7 @@
       height: 22px;
     }
 
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
+    .switch input { opacity: 0; width: 0; height: 0; }
 
     .slider {
       position: absolute;
@@ -549,13 +553,8 @@
       border-radius: 50%;
     }
 
-    input:checked + .slider {
-      background-color: #3b82f6;
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(18px);
-    }
+    input:checked + .slider { background-color: #3b82f6; }
+    input:checked + .slider:before { transform: translateX(18px); }
 
     /* Modal Backdrop */
     .modal-backdrop {
@@ -594,15 +593,13 @@
       transition: all 0.15s;
     }
 
-    .btn:active {
-      transform: scale(0.97);
-    }
-
+    .btn:active { transform: scale(0.97); }
     .btn-main { background: #ffffff; color: #000000; }
     .btn-secondary { background: #27272a; color: #ffffff; }
     .btn-danger { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); }
+    .btn-primary { background: var(--accent); color: #fff; }
 
-    /* MULTI-PRODUCT PIN EDITOR MODAL */
+    /* MULTI-PRODUCT PIN EDITOR */
     .editor-container {
       flex: 1;
       position: relative;
@@ -638,16 +635,6 @@
       align-items: center;
       cursor: grab;
       z-index: 20;
-      animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    .product-pin:active {
-      cursor: grabbing;
-    }
-
-    @keyframes popIn {
-      0% { transform: translate(-50%, -80%) scale(0.5); opacity: 0; }
-      100% { transform: translate(-50%, -100%) scale(1); opacity: 1; }
     }
 
     .pin-pill {
@@ -665,17 +652,9 @@
       gap: 6px;
     }
 
-    .pin-del-btn {
-      color: #f87171;
-      font-size: 0.75rem;
-      padding: 0 2px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
+    .pin-del-btn { color: #f87171; font-size: 0.75rem; padding: 0 2px; font-weight: bold; cursor: pointer; }
     .pin-pointer {
-      width: 0;
-      height: 0;
+      width: 0; height: 0;
       border-left: 6px solid transparent;
       border-right: 6px solid transparent;
       border-top: 7px solid rgba(0, 0, 0, 0.85);
@@ -689,6 +668,71 @@
       padding: 8px 4px;
       color: var(--text-dim);
       font-size: 0.78rem;
+    }
+
+    /* 🧩 COLLAGE / GHÉP ẢNH MODAL */
+    .collage-settings {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .collage-grid-select {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      width: 100%;
+      overflow-y: auto;
+      max-height: 52vh;
+      padding: 4px;
+    }
+
+    .collage-item {
+      position: relative;
+      aspect-ratio: 1;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 2px solid transparent;
+      cursor: pointer;
+      background: #000;
+    }
+
+    .collage-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+
+    .collage-item.selected {
+      border-color: #3b82f6;
+    }
+
+    .collage-item.selected img {
+      opacity: 1;
+    }
+
+    .collage-check {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.6);
+      border: 1.5px solid #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+
+    .collage-item.selected .collage-check {
+      background: #3b82f6;
+      border-color: #3b82f6;
     }
 
     /* Modal Gallery */
@@ -711,17 +755,10 @@
       cursor: pointer;
     }
 
-    .gallery-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
     .gallery-item-tag {
       position: absolute;
-      bottom: 2px;
-      left: 2px;
-      right: 2px;
+      bottom: 2px; left: 2px; right: 2px;
       background: rgba(0, 0, 0, 0.75);
       color: #ffffff;
       font-size: 0.65rem;
@@ -745,13 +782,9 @@
       transition: opacity 0.05s ease-out;
     }
 
-    .flash-anim.active {
-      opacity: 0.95;
-    }
-
-    #nativeFileInput {
-      display: none;
-    }
+    .flash-anim.active { opacity: 0.95; }
+    #nativeFileInput { display: none; }
+    #uploadCollageFiles { display: none; }
 
     /* Toast */
     .toast {
@@ -776,34 +809,7 @@
       gap: 6px;
     }
 
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    /* 🔄 Responsive khi xoay ngang điện thoại (Device Landscape Mode) */
-    @media (orientation: landscape) and (max-height: 550px) {
-      main {
-        max-width: 90%;
-        flex-direction: row;
-        align-items: center;
-        gap: 16px;
-        padding-bottom: 20px;
-      }
-      .camera-wrapper {
-        flex: 1.4;
-        max-height: 75vh;
-      }
-      .control-card {
-        flex: 1;
-        max-height: 75vh;
-        overflow-y: auto;
-      }
-      .shutter-bar {
-        flex-direction: column;
-        gap: 12px;
-      }
-    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 <body>
@@ -817,14 +823,18 @@
       </svg>
       <span>StampCam</span>
     </div>
-    <div class="header-badge" id="cameraStatusBadge">Đang khởi động...</div>
+    <div class="header-right">
+      <button class="btn-collage-header" id="btnOpenCollageTop">🧩 Ghép Ảnh</button>
+      <div class="header-badge" id="cameraStatusBadge">Sẵn sàng</div>
+    </div>
   </header>
 
   <main>
     <!-- Chọn Chế Độ Chụp -->
     <div class="mode-tab-bar">
-      <button class="mode-tab active" id="tabSingleMode">🏷️ 1 Sản Phẩm / Ảnh</button>
+      <button class="mode-tab active" id="tabSingleMode">🏷️ 1 SP / Ảnh</button>
       <button class="mode-tab" id="tabMultiMode">🎯 Nhiều SP (Ghim)</button>
+      <button class="mode-tab" id="tabCollageMode">🧩 Ghép Ảnh</button>
     </div>
 
     <!-- Số Thứ Tự & Tiền Tố -->
@@ -855,7 +865,7 @@
       </div>
     </div>
 
-    <!-- Khung Xem Trước Camera (Hỗ trợ Chụp Dọc & Chụp Ngang) -->
+    <!-- Khung Xem Trước Camera -->
     <div class="camera-wrapper aspect-portrait" id="cameraWrapper">
       <div class="flash-anim" id="flashLayer"></div>
 
@@ -875,9 +885,7 @@
         🎯 Chụp xong chạm vào từng SP để ghim
       </div>
 
-      <!-- Action buttons on camera -->
       <div class="camera-top-actions">
-        <!-- Nút chuyển đổi nhanh Khổ Dọc / Khổ Ngang -->
         <button class="btn-icon-glass" id="btnToggleRatio" title="Đổi khung dọc / ngang">
           <span id="ratioText">📱 Dọc</span>
         </button>
@@ -986,25 +994,65 @@
     </div>
   </main>
 
-  <!-- MODAL GHIM NHIỀU SẢN PHẨM TRÊN 1 HÌNH -->
+  <!-- 🎯 MODAL GHIM NHIỀU SẢN PHẨM (PIN EDITOR) -->
   <div class="modal-backdrop" id="pinEditorModal">
     <div class="modal-header">
       <h3 style="font-size: 1rem; font-weight: 600; color: #fff;">Chạm vào từng SP để ghim mã</h3>
       <button class="btn-icon-glass" id="btnCancelPinEditor" style="width: 36px; height: 36px; padding: 0;">✕</button>
     </div>
-
     <div class="editor-container" id="editorContainer">
       <img id="editorImage" src="" alt="Editor Base">
       <div class="pin-layer" id="pinLayer"></div>
     </div>
-
     <div class="editor-toolbar">
       <span>Đã ghim: <b id="pinCountText" style="color: #60a5fa;">0</b> sản phẩm</span>
       <button style="background: none; border: none; color: #f87171; font-weight: 600; cursor: pointer;" id="btnUndoPin">↩ Hoàn tác</button>
     </div>
-
     <div class="modal-footer" style="margin-top: 4px;">
       <button class="btn btn-main" id="btnFinishPinning">✓ Hoàn tất & Đóng dấu</button>
+    </div>
+  </div>
+
+  <!-- 🧩 MODAL GHÉP NHIỀU ẢNH (COLLAGE STUDIO) -->
+  <div class="modal-backdrop" id="collageModal">
+    <div class="modal-header">
+      <h3 style="font-size: 1rem; font-weight: 600; color: #fff;">Ghép Nhiều Ảnh Sản Phẩm</h3>
+      <button class="btn-icon-glass" id="btnCloseCollage" style="width: 36px; height: 36px; padding: 0;">✕</button>
+    </div>
+
+    <!-- Tùy chọn bố cục ghép -->
+    <div class="collage-settings">
+      <div class="input-group">
+        <label>Bố cục ghép</label>
+        <select id="collageLayoutSelect">
+          <option value="grid2x2" selected>Lưới 4 ảnh (2x2 Vuông)</option>
+          <option value="grid2x1">Ghép 2 ảnh (Dọc hoặc Ngang)</option>
+          <option value="grid3x1">Ghép 3 ảnh</option>
+          <option value="grid2x3">Lưới 6 ảnh (2 Cột x 3 Hàng)</option>
+          <option value="vertical">Dải cuộn dài (Xếp dọc)</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label>Khung viền</label>
+        <select id="collageBorderSelect">
+          <option value="black" selected>Viền Đen Mảnh</option>
+          <option value="white">Viền Trắng</option>
+          <option value="none">Không viền</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+      <span style="font-size: 0.75rem; color: var(--text-dim);">Chọn ảnh từ bộ sưu tập hoặc tải lên:</span>
+      <label for="uploadCollageFiles" style="color: #60a5fa; font-size: 0.78rem; font-weight: 600; cursor: pointer;">+ Thêm ảnh từ máy</label>
+      <input type="file" id="uploadCollageFiles" multiple accept="image/*">
+    </div>
+
+    <div class="collage-grid-select" id="collageGridSelect"></div>
+
+    <div class="modal-footer" style="margin-top: 10px;">
+      <button class="btn btn-main" id="btnGenerateCollage">🧩 Ghép <span id="selectedCountText">0</span> Ảnh & Xuất</button>
     </div>
   </div>
 
@@ -1048,9 +1096,10 @@
     </div>
     <div class="modal-footer" style="flex-direction: column;">
       <div style="display: flex; gap: 8px; width: 100%;">
-        <button class="btn btn-danger" id="btnClearGallery">Xóa tất cả</button>
-        <button class="btn btn-main" id="btnDownloadZip">Tải file ZIP</button>
+        <button class="btn btn-secondary" id="btnGoCollageFromGallery">🧩 Ghép nhiều ảnh</button>
+        <button class="btn btn-main" id="btnDownloadZip">Tải ZIP</button>
       </div>
+      <button class="btn btn-danger" id="btnClearGallery" style="padding: 10px; font-size: 0.85rem;">Xóa tất cả</button>
     </div>
   </div>
 
@@ -1060,18 +1109,23 @@
   <script>
     const state = {
       mode: 'single',
-      orientation: 'portrait', // 'portrait' (dọc) hoặc 'landscape' (ngang)
+      orientation: 'portrait',
       stream: null,
       facingMode: 'environment',
       capturedPhotos: [],
       currentPhotoDataUrl: null,
       currentPhotoCode: '',
       rawPhotoImg: null,
-      pins: []
+      pins: [],
+      selectedCollageImages: [] // Danh sách ảnh được chọn để ghép
     };
 
     const tabSingleMode = document.getElementById('tabSingleMode');
     const tabMultiMode = document.getElementById('tabMultiMode');
+    const tabCollageMode = document.getElementById('tabCollageMode');
+    const btnOpenCollageTop = document.getElementById('btnOpenCollageTop');
+    const btnGoCollageFromGallery = document.getElementById('btnGoCollageFromGallery');
+
     const cameraWrapper = document.getElementById('cameraWrapper');
     const btnToggleRatio = document.getElementById('btnToggleRatio');
     const ratioText = document.getElementById('ratioText');
@@ -1101,6 +1155,17 @@
     const flashLayer = document.getElementById('flashLayer');
     const cameraStatusBadge = document.getElementById('cameraStatusBadge');
 
+    // Collage Elements
+    const collageModal = document.getElementById('collageModal');
+    const btnCloseCollage = document.getElementById('btnCloseCollage');
+    const collageGridSelect = document.getElementById('collageGridSelect');
+    const collageLayoutSelect = document.getElementById('collageLayoutSelect');
+    const collageBorderSelect = document.getElementById('collageBorderSelect');
+    const btnGenerateCollage = document.getElementById('btnGenerateCollage');
+    const selectedCountText = document.getElementById('selectedCountText');
+    const uploadCollageFiles = document.getElementById('uploadCollageFiles');
+
+    // Pin Editor Elements
     const pinEditorModal = document.getElementById('pinEditorModal');
     const editorImage = document.getElementById('editorImage');
     const pinLayer = document.getElementById('pinLayer');
@@ -1109,6 +1174,7 @@
     const btnFinishPinning = document.getElementById('btnFinishPinning');
     const btnCancelPinEditor = document.getElementById('btnCancelPinEditor');
 
+    // Preview Elements
     const previewModal = document.getElementById('previewModal');
     const previewModalImg = document.getElementById('previewModalImg');
     const btnClosePreview = document.getElementById('btnClosePreview');
@@ -1116,6 +1182,7 @@
     const btnSaveToPhotos = document.getElementById('btnSaveToPhotos');
     const btnDownloadSingle = document.getElementById('btnDownloadSingle');
 
+    // Gallery Elements
     const galleryModal = document.getElementById('galleryModal');
     const btnOpenGallery = document.getElementById('btnOpenGallery');
     const btnCloseGallery = document.getElementById('btnCloseGallery');
@@ -1131,44 +1198,45 @@
     const canvas = document.getElementById('stampCanvas');
     const ctx = canvas.getContext('2d');
 
-    // 🔄 Chuyển Đổi Khung Hình Chụp Dọc / Ngang
+    // Tỷ lệ khung hình Dọc / Ngang
     function setAspectRatio(ratio) {
       state.orientation = ratio;
       ratioSelect.value = ratio;
       if (ratio === 'landscape') {
         cameraWrapper.className = 'camera-wrapper aspect-landscape';
         ratioText.textContent = '🖼️ Ngang';
-        showToast('Đã chuyển sang chế độ Khổ Ngang (Landscape)');
       } else {
         cameraWrapper.className = 'camera-wrapper aspect-portrait';
         ratioText.textContent = '📱 Dọc';
-        showToast('Đã chuyển sang chế độ Khổ Dọc (Portrait)');
       }
     }
 
     btnToggleRatio.addEventListener('click', () => {
-      const nextRatio = state.orientation === 'portrait' ? 'landscape' : 'portrait';
-      setAspectRatio(nextRatio);
+      setAspectRatio(state.orientation === 'portrait' ? 'landscape' : 'portrait');
     });
 
-    ratioSelect.addEventListener('change', (e) => {
-      setAspectRatio(e.target.value);
-    });
+    ratioSelect.addEventListener('change', (e) => setAspectRatio(e.target.value));
 
-    // Chuyển Mode Đơn / Đa SP
+    // Chuyển Mode
     tabSingleMode.addEventListener('click', () => setMode('single'));
     tabMultiMode.addEventListener('click', () => setMode('multi'));
+    tabCollageMode.addEventListener('click', openCollageModal);
+    btnOpenCollageTop.addEventListener('click', openCollageModal);
+    btnGoCollageFromGallery.addEventListener('click', () => {
+      galleryModal.style.display = 'none';
+      openCollageModal();
+    });
 
     function setMode(mode) {
       state.mode = mode;
+      tabSingleMode.classList.toggle('active', mode === 'single');
+      tabMultiMode.classList.toggle('active', mode === 'multi');
+      tabCollageMode.classList.remove('active');
+
       if (mode === 'single') {
-        tabSingleMode.classList.add('active');
-        tabMultiMode.classList.remove('active');
         liveStamp.style.display = 'inline-flex';
         multiModeIndicator.style.display = 'none';
       } else {
-        tabMultiMode.classList.add('active');
-        tabSingleMode.classList.remove('active');
         liveStamp.style.display = 'none';
         multiModeIndicator.style.display = 'flex';
         showToast('Chế độ Đa Sản Phẩm: Chụp xong chạm để ghim mã');
@@ -1459,7 +1527,6 @@
       const style = styleSelect.value;
       const fontSizeMode = fontSizeSelect.value;
 
-      // Tính cỡ chữ theo kích thước ngắn hơn để ảnh ngang hay dọc đều cân đối
       const minDimension = Math.min(width, height);
       let baseFontSize = Math.max(30, Math.round(minDimension * 0.048));
       if (fontSizeMode === 'small') baseFontSize = Math.round(baseFontSize * 0.7);
@@ -1638,6 +1705,165 @@
       ctx.stroke();
     }
 
+    // --- 🧩 LOGIC GHÉP NHIỀU ẢNH (COLLAGE STUDIO) ---
+    function openCollageModal() {
+      state.selectedCollageImages = [];
+      renderCollageSelectionGrid();
+      collageModal.style.display = 'flex';
+    }
+
+    btnCloseCollage.addEventListener('click', () => collageModal.style.display = 'none');
+
+    function renderCollageSelectionGrid() {
+      collageGridSelect.innerHTML = '';
+      selectedCountText.textContent = state.selectedCollageImages.length;
+
+      if (state.capturedPhotos.length === 0) {
+        collageGridSelect.innerHTML = `
+          <div style="grid-column: span 3; text-align: center; color: var(--text-dim); padding: 30px 10px; font-size: 0.85rem;">
+            Chưa có ảnh trong bộ sưu tập.<br>Hãy chụp ảnh hoặc bấm <b>"+ Thêm ảnh từ máy"</b> ở trên.
+          </div>
+        `;
+        return;
+      }
+
+      state.capturedPhotos.forEach((item, index) => {
+        const isSelected = state.selectedCollageImages.includes(item.dataUrl);
+        const selIdx = state.selectedCollageImages.indexOf(item.dataUrl);
+
+        const div = document.createElement('div');
+        div.className = `collage-item ${isSelected ? 'selected' : ''}`;
+        div.innerHTML = `
+          <img src="${item.dataUrl}" alt="${item.code}">
+          <div class="collage-check">${isSelected ? (selIdx + 1) : ''}</div>
+          <div class="gallery-item-tag">${item.code}</div>
+        `;
+
+        div.addEventListener('click', () => {
+          if (state.selectedCollageImages.includes(item.dataUrl)) {
+            state.selectedCollageImages = state.selectedCollageImages.filter(url => url !== item.dataUrl);
+          } else {
+            state.selectedCollageImages.push(item.dataUrl);
+          }
+          renderCollageSelectionGrid();
+        });
+
+        collageGridSelect.appendChild(div);
+      });
+    }
+
+    // Thêm ảnh từ thư viện máy để ghép
+    uploadCollageFiles.addEventListener('change', (e) => {
+      const files = Array.from(e.target.files);
+      if (files.length === 0) return;
+
+      let loaded = 0;
+      files.forEach((file, i) => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          state.capturedPhotos.unshift({
+            dataUrl: event.target.result,
+            code: `FILE-${i + 1}`,
+            timestamp: Date.now()
+          });
+          state.selectedCollageImages.push(event.target.result);
+          loaded++;
+          if (loaded === files.length) {
+            renderCollageSelectionGrid();
+            showToast(`Đã thêm ${files.length} ảnh`);
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+
+    // Tạo ảnh ghép
+    btnGenerateCollage.addEventListener('click', async () => {
+      const imgUrls = state.selectedCollageImages;
+      if (imgUrls.length < 2) {
+        showToast('Vui lòng chọn ít nhất 2 ảnh để ghép!');
+        return;
+      }
+
+      showToast('Đang xử lý ghép ảnh...');
+
+      // Load all selected images
+      const loadedImgs = await Promise.all(imgUrls.map(url => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.onload = () => resolve(img);
+          img.src = url;
+        });
+      }));
+
+      const layout = collageLayoutSelect.value;
+      const borderMode = collageBorderSelect.value;
+      const count = loadedImgs.length;
+
+      let cols = 2;
+      let rows = 2;
+
+      if (layout === 'grid2x1') {
+        cols = count === 2 ? 2 : Math.ceil(count / 2);
+        rows = count === 2 ? 1 : 2;
+      } else if (layout === 'grid3x1') {
+        cols = 3;
+        rows = Math.ceil(count / 3);
+      } else if (layout === 'grid2x3') {
+        cols = 2;
+        rows = 3;
+      } else if (layout === 'vertical') {
+        cols = 1;
+        rows = count;
+      } else {
+        // Grid 2x2
+        cols = Math.ceil(Math.sqrt(count));
+        rows = Math.ceil(count / cols);
+      }
+
+      const cellW = 1080;
+      const cellH = 1080;
+      const gap = borderMode === 'none' ? 0 : 16;
+      const totalW = cols * cellW + (cols + 1) * gap;
+      const totalH = rows * cellH + (rows + 1) * gap;
+
+      canvas.width = totalW;
+      canvas.height = totalH;
+
+      ctx.fillStyle = borderMode === 'white' ? '#ffffff' : '#090a0f';
+      ctx.fillRect(0, 0, totalW, totalH);
+
+      loadedImgs.forEach((img, i) => {
+        const c = i % cols;
+        const r = Math.floor(i / cols);
+
+        const dx = gap + c * (cellW + gap);
+        const dy = gap + r * (cellH + gap);
+
+        // Draw image cover in cell
+        const imgRatio = img.naturalWidth / img.naturalHeight;
+        const cellRatio = cellW / cellH;
+        let sx = 0, sy = 0, sw = img.naturalWidth, sh = img.naturalHeight;
+
+        if (imgRatio > cellRatio) {
+          sw = img.naturalHeight * cellRatio;
+          sx = (img.naturalWidth - sw) / 2;
+        } else {
+          sh = img.naturalWidth / cellRatio;
+          sy = (img.naturalHeight - sh) / 2;
+        }
+
+        ctx.drawImage(img, sx, sy, sw, sh, dx, dy, cellW, cellH);
+      });
+
+      const finalUrl = canvas.toDataURL('image/jpeg', 0.94);
+      const collageCode = `GHEP-${count}SP`;
+
+      collageModal.style.display = 'none';
+      onPhotoSaved(finalUrl, collageCode);
+      showToast(`Đã ghép thành công ${count} ảnh!`);
+    });
+
     function onPhotoSaved(dataUrl, code) {
       state.currentPhotoDataUrl = dataUrl;
       state.currentPhotoCode = code;
@@ -1652,7 +1878,7 @@
 
       previewModalImg.src = dataUrl;
       previewModal.style.display = 'flex';
-      showToast(`Đã lưu ảnh: ${code}`);
+      showToast(`Đã lưu: ${code}`);
     }
 
     async function saveImageToIPhonePhotos() {
