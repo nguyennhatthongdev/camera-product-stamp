@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>StampCam - Chụp, Đóng Dấu & Ghép Ảnh Sản Phẩm</title>
+  <title>StampCam - Chụp, Đóng Dấu, Tra Giá Shopee & Ghép Ảnh</title>
 
   <!-- PWA & iOS Safari Meta Tags -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -24,6 +24,7 @@
       --text-muted: #71717a;
       --text-dim: #a1a1aa;
       --accent: #2563eb;
+      --shopee: #ee4d2d;
       --radius: 18px;
     }
 
@@ -78,20 +79,10 @@
       gap: 8px;
     }
 
-    .header-badge {
+    .btn-header-tool {
       background: rgba(255, 255, 255, 0.08);
       color: var(--text-dim);
-      font-size: 0.72rem;
-      padding: 3px 9px;
-      border-radius: 999px;
-      font-weight: 500;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .btn-collage-header {
-      background: rgba(37, 99, 235, 0.2);
-      color: #60a5fa;
-      border: 1px solid rgba(37, 99, 235, 0.4);
+      border: 1px solid var(--card-border);
       padding: 4px 10px;
       border-radius: 999px;
       font-size: 0.75rem;
@@ -100,6 +91,13 @@
       display: flex;
       align-items: center;
       gap: 4px;
+      text-decoration: none;
+    }
+
+    .btn-header-tool.shopee {
+      background: rgba(238, 77, 45, 0.15);
+      color: #ff7854;
+      border-color: rgba(238, 77, 45, 0.3);
     }
 
     /* Main Container */
@@ -214,9 +212,44 @@
       transition: all 0.15s;
     }
 
-    .btn-step:active {
-      transform: scale(0.92);
-      background: rgba(255, 255, 255, 0.15);
+    .btn-step:active { transform: scale(0.92); background: rgba(255, 255, 255, 0.15); }
+
+    /* Price Search Row */
+    .search-price-bar {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .btn-quick-search {
+      flex: 1;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      background: rgba(0, 0, 0, 0.3);
+      color: var(--text-dim);
+      transition: all 0.15s;
+    }
+
+    .btn-quick-search.shopee {
+      color: #ff8566;
+      border-color: rgba(238, 77, 45, 0.25);
+    }
+
+    .btn-quick-search.shopee:active {
+      background: rgba(238, 77, 45, 0.2);
+    }
+
+    .btn-quick-search.google {
+      color: #60a5fa;
+      border-color: rgba(37, 99, 235, 0.25);
     }
 
     .quick-preview-tag {
@@ -372,9 +405,7 @@
       transition: transform 0.1s;
     }
 
-    .btn-icon-glass:active {
-      transform: scale(0.92);
-    }
+    .btn-icon-glass:active { transform: scale(0.92); }
 
     .multi-mode-indicator {
       position: absolute;
@@ -418,10 +449,7 @@
       cursor: pointer;
     }
 
-    .btn-native-file span.icon {
-      font-size: 1.25rem;
-      color: #fff;
-    }
+    .btn-native-file span.icon { font-size: 1.25rem; color: #fff; }
 
     .btn-shutter {
       width: 74px;
@@ -467,16 +495,10 @@
       font-size: 1.2rem;
     }
 
-    .gallery-preview-btn img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
+    .gallery-preview-btn img { width: 100%; height: 100%; object-fit: cover; }
     .gallery-badge-count {
       position: absolute;
-      top: -3px;
-      right: -3px;
+      top: -3px; right: -3px;
       background: #fff;
       color: #000;
       font-size: 0.65rem;
@@ -517,42 +539,18 @@
       grid-column: span 2;
     }
 
-    .toggle-group span {
-      font-size: 0.82rem;
-      font-weight: 500;
-      color: var(--text-dim);
-    }
+    .toggle-group span { font-size: 0.82rem; font-weight: 500; color: var(--text-dim); }
 
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 40px;
-      height: 22px;
-    }
-
+    .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
     .switch input { opacity: 0; width: 0; height: 0; }
-
     .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: #27272a;
-      transition: .2s;
-      border-radius: 24px;
+      position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #27272a; transition: .2s; border-radius: 24px;
     }
-
     .slider:before {
-      position: absolute;
-      content: "";
-      height: 16px;
-      width: 16px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: .2s;
-      border-radius: 50%;
+      position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px;
+      background-color: white; transition: .2s; border-radius: 50%;
     }
-
     input:checked + .slider { background-color: #3b82f6; }
     input:checked + .slider:before { transform: translateX(18px); }
 
@@ -597,7 +595,46 @@
     .btn-main { background: #ffffff; color: #000000; }
     .btn-secondary { background: #27272a; color: #ffffff; }
     .btn-danger { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); }
-    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-shopee { background: #ee4d2d; color: #ffffff; }
+
+    /* 🔍 MODAL TRA CỨU GIÁ (PRICE LOOKUP MODAL) */
+    .price-lookup-card {
+      background: #14161f;
+      border-radius: 14px;
+      padding: 14px;
+      border: 1px solid var(--card-border);
+      margin-bottom: 12px;
+    }
+
+    .price-platform-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .platform-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 8px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.4);
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+
+    .platform-btn:active { transform: scale(0.96); }
+    .platform-btn.shopee { border-color: rgba(238, 77, 45, 0.4); background: rgba(238, 77, 45, 0.12); color: #ff7854; }
+    .platform-btn.lazada { border-color: rgba(15, 20, 110, 0.4); background: rgba(15, 20, 110, 0.2); color: #60a5fa; }
+    .platform-btn.google { border-color: rgba(66, 133, 244, 0.4); background: rgba(66, 133, 244, 0.12); color: #93c5fd; }
+    .platform-btn.tiktok { border-color: rgba(254, 44, 85, 0.4); background: rgba(254, 44, 85, 0.12); color: #fda4af; }
 
     /* MULTI-PRODUCT PIN EDITOR */
     .editor-container {
@@ -613,202 +650,57 @@
       touch-action: none;
     }
 
-    #editorImage {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      display: block;
-      pointer-events: none;
-    }
-
-    .pin-layer {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      cursor: crosshair;
-    }
-
-    .product-pin {
-      position: absolute;
-      transform: translate(-50%, -100%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      cursor: grab;
-      z-index: 20;
-    }
-
+    #editorImage { max-width: 100%; max-height: 100%; object-fit: contain; display: block; pointer-events: none; }
+    .pin-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: crosshair; }
+    .product-pin { position: absolute; transform: translate(-50%, -100%); display: flex; flex-direction: column; align-items: center; cursor: grab; z-index: 20; }
     .pin-pill {
-      background: rgba(0, 0, 0, 0.85);
-      color: #fff;
-      padding: 4px 10px;
-      border-radius: 8px;
-      font-size: 0.78rem;
-      font-weight: 800;
-      white-space: nowrap;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      background: rgba(0, 0, 0, 0.85); color: #fff; padding: 4px 10px; border-radius: 8px; font-size: 0.78rem;
+      font-weight: 800; white-space: nowrap; border: 1px solid rgba(255, 255, 255, 0.3); box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+      display: flex; align-items: center; gap: 6px;
     }
-
     .pin-del-btn { color: #f87171; font-size: 0.75rem; padding: 0 2px; font-weight: bold; cursor: pointer; }
     .pin-pointer {
-      width: 0; height: 0;
-      border-left: 6px solid transparent;
-      border-right: 6px solid transparent;
-      border-top: 7px solid rgba(0, 0, 0, 0.85);
-      margin-top: -1px;
+      width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent;
+      border-top: 7px solid rgba(0, 0, 0, 0.85); margin-top: -1px;
     }
+    .editor-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 8px 4px; color: var(--text-dim); font-size: 0.78rem; }
 
-    .editor-toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 4px;
-      color: var(--text-dim);
-      font-size: 0.78rem;
-    }
-
-    /* 🧩 COLLAGE / GHÉP ẢNH MODAL */
-    .collage-settings {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-
-    .collage-grid-select {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      width: 100%;
-      overflow-y: auto;
-      max-height: 52vh;
-      padding: 4px;
-    }
-
-    .collage-item {
-      position: relative;
-      aspect-ratio: 1;
-      border-radius: 10px;
-      overflow: hidden;
-      border: 2px solid transparent;
-      cursor: pointer;
-      background: #000;
-    }
-
-    .collage-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0.6;
-      transition: opacity 0.2s;
-    }
-
-    .collage-item.selected {
-      border-color: #3b82f6;
-    }
-
-    .collage-item.selected img {
-      opacity: 1;
-    }
-
+    /* COLLAGE */
+    .collage-settings { display: flex; gap: 8px; margin-bottom: 10px; }
+    .collage-grid-select { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; overflow-y: auto; max-height: 52vh; padding: 4px; }
+    .collage-item { position: relative; aspect-ratio: 1; border-radius: 10px; overflow: hidden; border: 2px solid transparent; cursor: pointer; background: #000; }
+    .collage-item img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; transition: opacity 0.2s; }
+    .collage-item.selected { border-color: #3b82f6; }
+    .collage-item.selected img { opacity: 1; }
     .collage-check {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: rgba(0,0,0,0.6);
-      border: 1.5px solid #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 0.75rem;
-      font-weight: bold;
+      position: absolute; top: 6px; right: 6px; width: 22px; height: 22px; border-radius: 50%;
+      background: rgba(0,0,0,0.6); border: 1.5px solid #fff; display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 0.75rem; font-weight: bold;
     }
+    .collage-item.selected .collage-check { background: #3b82f6; border-color: #3b82f6; }
 
-    .collage-item.selected .collage-check {
-      background: #3b82f6;
-      border-color: #3b82f6;
-    }
-
-    /* Modal Gallery */
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      width: 100%;
-      overflow-y: auto;
-      max-height: 60vh;
-      padding: 4px;
-    }
-
-    .gallery-item {
-      position: relative;
-      aspect-ratio: 1;
-      border-radius: 8px;
-      overflow: hidden;
-      border: 1px solid var(--card-border);
-      cursor: pointer;
-    }
-
+    /* Gallery Grid */
+    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; overflow-y: auto; max-height: 60vh; padding: 4px; }
+    .gallery-item { position: relative; aspect-ratio: 1; border-radius: 8px; overflow: hidden; border: 1px solid var(--card-border); cursor: pointer; }
     .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
     .gallery-item-tag {
-      position: absolute;
-      bottom: 2px; left: 2px; right: 2px;
-      background: rgba(0, 0, 0, 0.75);
-      color: #ffffff;
-      font-size: 0.65rem;
-      font-weight: 600;
-      text-align: center;
-      padding: 2px;
-      border-radius: 4px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      position: absolute; bottom: 2px; left: 2px; right: 2px; background: rgba(0, 0, 0, 0.75); color: #ffffff;
+      font-size: 0.65rem; font-weight: 600; text-align: center; padding: 2px; border-radius: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
 
     /* Flash */
-    .flash-anim {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: white;
-      opacity: 0;
-      pointer-events: none;
-      z-index: 30;
-      transition: opacity 0.05s ease-out;
-    }
-
+    .flash-anim { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: white; opacity: 0; pointer-events: none; z-index: 30; transition: opacity 0.05s ease-out; }
     .flash-anim.active { opacity: 0.95; }
     #nativeFileInput { display: none; }
     #uploadCollageFiles { display: none; }
 
     /* Toast */
     .toast {
-      position: fixed;
-      bottom: 90px;
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: rgba(24, 24, 27, 0.95);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: #fff;
-      padding: 9px 16px;
-      border-radius: 999px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-      pointer-events: none;
-      opacity: 0;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      z-index: 200;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: rgba(24, 24, 27, 0.95); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff;
+      padding: 9px 16px; border-radius: 999px; font-size: 0.85rem; font-weight: 500; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      pointer-events: none; opacity: 0; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); z-index: 200; display: flex; align-items: center; gap: 6px;
     }
-
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
 </head>
@@ -824,8 +716,8 @@
       <span>StampCam</span>
     </div>
     <div class="header-right">
-      <button class="btn-collage-header" id="btnOpenCollageTop">🧩 Ghép Ảnh</button>
-      <div class="header-badge" id="cameraStatusBadge">Sẵn sàng</div>
+      <button class="btn-header-tool shopee" id="btnOpenPriceLookupTop">🔍 Tra Giá</button>
+      <button class="btn-header-tool" id="btnOpenCollageTop">🧩 Ghép</button>
     </div>
   </header>
 
@@ -855,8 +747,24 @@
       </div>
 
       <div class="input-group" id="noteInputGroup" style="margin-top: 10px;">
-        <label>Ghi chú (Tùy chọn)</label>
-        <input type="text" id="noteInput" placeholder="VD: Size L - Đen">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <label>Tên SP / Ghi chú / Giá</label>
+          <span style="color: #ff8566; font-size: 0.72rem; font-weight: 600; cursor: pointer;" id="btnQuickSearchShopee">🧡 Tìm giá Shopee</span>
+        </div>
+        <input type="text" id="noteInput" placeholder="VD: Áo thun trắng - 180k">
+      </div>
+
+      <!-- Nút Tra Cứu Giá Nhanh 1 Chạm -->
+      <div class="search-price-bar">
+        <button class="btn-quick-search shopee" id="btnSearchShopee">
+          <span>🧡 Shopee</span>
+        </button>
+        <button class="btn-quick-search google" id="btnSearchGoogle">
+          <span>💙 Google Shop</span>
+        </button>
+        <button class="btn-quick-search" id="btnSearchTiktok">
+          <span>🖤 TikTok / Web</span>
+        </button>
       </div>
 
       <div class="quick-preview-tag">
@@ -994,6 +902,49 @@
     </div>
   </main>
 
+  <!-- 🔍 MODAL TRA CỨU GIÁ SHOPEE / LAZADA / GOOGLE -->
+  <div class="modal-backdrop" id="priceLookupModal">
+    <div class="modal-header">
+      <h3 style="font-size: 1rem; font-weight: 600; color: #fff;">Tra Cứu Giá Thị Trường</h3>
+      <button class="btn-icon-glass" id="btnClosePriceLookup" style="width: 36px; height: 36px; padding: 0;">✕</button>
+    </div>
+
+    <div class="price-lookup-card">
+      <div class="input-group">
+        <label>Tên hoặc mã sản phẩm cần tra</label>
+        <input type="text" id="lookupKeywordInput" placeholder="VD: Giày Nike Air Force 1, Áo Polo Uniqlo...">
+      </div>
+
+      <div class="price-platform-grid">
+        <a class="platform-btn shopee" id="linkShopeeSearch" target="_blank" href="#">
+          <span>🧡 Shopee</span>
+        </a>
+        <a class="platform-btn google" id="linkGoogleShopSearch" target="_blank" href="#">
+          <span>💙 Google Shop</span>
+        </a>
+        <a class="platform-btn lazada" id="linkLazadaSearch" target="_blank" href="#">
+          <span>🛒 Lazada</span>
+        </a>
+        <a class="platform-btn tiktok" id="linkTiktokSearch" target="_blank" href="#">
+          <span>🖤 TikTok Shop</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Điền nhanh mức giá tìm được vào con dấu -->
+    <div class="price-lookup-card">
+      <label style="font-size: 0.72rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase;">Điền nhanh giá vào Con Dấu</label>
+      <div style="display: flex; gap: 8px; margin-top: 8px;">
+        <input type="text" id="foundPriceInput" placeholder="VD: 250k hoặc 250.000đ" style="flex: 1.5;">
+        <button class="btn btn-main" id="btnApplyPriceToStamp" style="flex: 1; padding: 10px;">Áp Dụng</button>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btnClosePriceModalFooter">Đóng</button>
+    </div>
+  </div>
+
   <!-- 🎯 MODAL GHIM NHIỀU SẢN PHẨM (PIN EDITOR) -->
   <div class="modal-backdrop" id="pinEditorModal">
     <div class="modal-header">
@@ -1020,13 +971,12 @@
       <button class="btn-icon-glass" id="btnCloseCollage" style="width: 36px; height: 36px; padding: 0;">✕</button>
     </div>
 
-    <!-- Tùy chọn bố cục ghép -->
     <div class="collage-settings">
       <div class="input-group">
         <label>Bố cục ghép</label>
         <select id="collageLayoutSelect">
           <option value="grid2x2" selected>Lưới 4 ảnh (2x2 Vuông)</option>
-          <option value="grid2x1">Ghép 2 ảnh (Dọc hoặc Ngang)</option>
+          <option value="grid2x1">Ghép 2 ảnh (Dọc/Ngang)</option>
           <option value="grid3x1">Ghép 3 ảnh</option>
           <option value="grid2x3">Lưới 6 ảnh (2 Cột x 3 Hàng)</option>
           <option value="vertical">Dải cuộn dài (Xếp dọc)</option>
@@ -1044,7 +994,7 @@
     </div>
 
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-      <span style="font-size: 0.75rem; color: var(--text-dim);">Chọn ảnh từ bộ sưu tập hoặc tải lên:</span>
+      <span style="font-size: 0.75rem; color: var(--text-dim);">Chọn ảnh để ghép:</span>
       <label for="uploadCollageFiles" style="color: #60a5fa; font-size: 0.78rem; font-weight: 600; cursor: pointer;">+ Thêm ảnh từ máy</label>
       <input type="file" id="uploadCollageFiles" multiple accept="image/*">
     </div>
@@ -1117,7 +1067,7 @@
       currentPhotoCode: '',
       rawPhotoImg: null,
       pins: [],
-      selectedCollageImages: [] // Danh sách ảnh được chọn để ghép
+      selectedCollageImages: []
     };
 
     const tabSingleMode = document.getElementById('tabSingleMode');
@@ -1155,6 +1105,23 @@
     const flashLayer = document.getElementById('flashLayer');
     const cameraStatusBadge = document.getElementById('cameraStatusBadge');
 
+    // Price Lookup Elements
+    const btnOpenPriceLookupTop = document.getElementById('btnOpenPriceLookupTop');
+    const btnQuickSearchShopee = document.getElementById('btnQuickSearchShopee');
+    const btnSearchShopee = document.getElementById('btnSearchShopee');
+    const btnSearchGoogle = document.getElementById('btnSearchGoogle');
+    const btnSearchTiktok = document.getElementById('btnSearchTiktok');
+    const priceLookupModal = document.getElementById('priceLookupModal');
+    const btnClosePriceLookup = document.getElementById('btnClosePriceLookup');
+    const btnClosePriceModalFooter = document.getElementById('btnClosePriceModalFooter');
+    const lookupKeywordInput = document.getElementById('lookupKeywordInput');
+    const linkShopeeSearch = document.getElementById('linkShopeeSearch');
+    const linkGoogleShopSearch = document.getElementById('linkGoogleShopSearch');
+    const linkLazadaSearch = document.getElementById('linkLazadaSearch');
+    const linkTiktokSearch = document.getElementById('linkTiktokSearch');
+    const foundPriceInput = document.getElementById('foundPriceInput');
+    const btnApplyPriceToStamp = document.getElementById('btnApplyPriceToStamp');
+
     // Collage Elements
     const collageModal = document.getElementById('collageModal');
     const btnCloseCollage = document.getElementById('btnCloseCollage');
@@ -1174,7 +1141,7 @@
     const btnFinishPinning = document.getElementById('btnFinishPinning');
     const btnCancelPinEditor = document.getElementById('btnCancelPinEditor');
 
-    // Preview Elements
+    // Preview & Gallery Elements
     const previewModal = document.getElementById('previewModal');
     const previewModalImg = document.getElementById('previewModalImg');
     const btnClosePreview = document.getElementById('btnClosePreview');
@@ -1182,7 +1149,6 @@
     const btnSaveToPhotos = document.getElementById('btnSaveToPhotos');
     const btnDownloadSingle = document.getElementById('btnDownloadSingle');
 
-    // Gallery Elements
     const galleryModal = document.getElementById('galleryModal');
     const btnOpenGallery = document.getElementById('btnOpenGallery');
     const btnCloseGallery = document.getElementById('btnCloseGallery');
@@ -1197,6 +1163,68 @@
     const toastMsg = document.getElementById('toastMsg');
     const canvas = document.getElementById('stampCanvas');
     const ctx = canvas.getContext('2d');
+
+    // --- 🔍 LOGIC TRA CỨU GIÁ SHOPEE / LAZADA / GOOGLE ---
+    function openPriceLookup(defaultQuery) {
+      const keyword = defaultQuery || noteInput.value.trim() || '';
+      lookupKeywordInput.value = keyword;
+      updatePriceSearchLinks(keyword);
+      priceLookupModal.style.display = 'flex';
+    }
+
+    function updatePriceSearchLinks(keyword) {
+      const q = encodeURIComponent(keyword.trim());
+      linkShopeeSearch.href = keyword ? `https://shopee.vn/search?keyword=${q}` : 'https://shopee.vn';
+      linkGoogleShopSearch.href = keyword ? `https://www.google.com/search?tbm=shop&q=${q}` : 'https://www.google.com';
+      linkLazadaSearch.href = keyword ? `https://www.lazada.vn/catalog/?q=${q}` : 'https://www.lazada.vn';
+      linkTiktokSearch.href = keyword ? `https://www.tiktok.com/search?q=${q}` : 'https://www.tiktok.com';
+    }
+
+    lookupKeywordInput.addEventListener('input', (e) => {
+      updatePriceSearchLinks(e.target.value);
+    });
+
+    btnOpenPriceLookupTop.addEventListener('click', () => openPriceLookup());
+    btnQuickSearchShopee.addEventListener('click', () => openPriceLookup());
+
+    // Nút tìm kiếm nhanh mở tab mới
+    btnSearchShopee.addEventListener('click', () => {
+      const q = encodeURIComponent(noteInput.value.trim() || 'sản phẩm');
+      window.open(`https://shopee.vn/search?keyword=${q}`, '_blank');
+    });
+
+    btnSearchGoogle.addEventListener('click', () => {
+      const q = encodeURIComponent(noteInput.value.trim() || 'sản phẩm');
+      window.open(`https://www.google.com/search?tbm=shop&q=${q}`, '_blank');
+    });
+
+    btnSearchTiktok.addEventListener('click', () => {
+      const q = encodeURIComponent(noteInput.value.trim() || 'sản phẩm');
+      window.open(`https://www.tiktok.com/search?q=${q}`, '_blank');
+    });
+
+    btnClosePriceLookup.addEventListener('click', () => priceLookupModal.style.display = 'none');
+    btnClosePriceModalFooter.addEventListener('click', () => priceLookupModal.style.display = 'none');
+
+    // Áp dụng giá tìm được vào con dấu
+    btnApplyPriceToStamp.addEventListener('click', () => {
+      const price = foundPriceInput.value.trim();
+      if (!price) {
+        showToast('Vui lòng nhập mức giá!');
+        return;
+      }
+
+      const currentNote = noteInput.value.trim();
+      if (currentNote) {
+        noteInput.value = `${currentNote} - ${price}`;
+      } else {
+        noteInput.value = price;
+      }
+
+      updateLivePreview();
+      priceLookupModal.style.display = 'none';
+      showToast(`Đã thêm giá ${price} vào con dấu!`);
+    });
 
     // Tỷ lệ khung hình Dọc / Ngang
     function setAspectRatio(ratio) {
@@ -1322,20 +1350,14 @@
     async function startCamera() {
       try {
         if (state.stream) state.stream.getTracks().forEach(t => t.stop());
-        cameraStatusBadge.textContent = 'Đang mở cam...';
-
         const constraints = {
           video: { facingMode: state.facingMode, width: { ideal: 1920 }, height: { ideal: 1080 } },
           audio: false
         };
-
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
         state.stream = stream;
         video.srcObject = stream;
-        cameraStatusBadge.textContent = state.facingMode === 'environment' ? 'Camera Sau' : 'Camera Trước';
-      } catch (err) {
-        cameraStatusBadge.textContent = 'Chế độ Chụp File';
-      }
+      } catch (err) {}
     }
 
     btnSwitchCam.addEventListener('click', () => {
@@ -1705,7 +1727,7 @@
       ctx.stroke();
     }
 
-    // --- 🧩 LOGIC GHÉP NHIỀU ẢNH (COLLAGE STUDIO) ---
+    // --- 🧩 COLLAGE STUDIO ---
     function openCollageModal() {
       state.selectedCollageImages = [];
       renderCollageSelectionGrid();
@@ -1727,7 +1749,7 @@
         return;
       }
 
-      state.capturedPhotos.forEach((item, index) => {
+      state.capturedPhotos.forEach((item) => {
         const isSelected = state.selectedCollageImages.includes(item.dataUrl);
         const selIdx = state.selectedCollageImages.indexOf(item.dataUrl);
 
@@ -1752,7 +1774,6 @@
       });
     }
 
-    // Thêm ảnh từ thư viện máy để ghép
     uploadCollageFiles.addEventListener('change', (e) => {
       const files = Array.from(e.target.files);
       if (files.length === 0) return;
@@ -1777,7 +1798,6 @@
       });
     });
 
-    // Tạo ảnh ghép
     btnGenerateCollage.addEventListener('click', async () => {
       const imgUrls = state.selectedCollageImages;
       if (imgUrls.length < 2) {
@@ -1787,7 +1807,6 @@
 
       showToast('Đang xử lý ghép ảnh...');
 
-      // Load all selected images
       const loadedImgs = await Promise.all(imgUrls.map(url => {
         return new Promise((resolve) => {
           const img = new Image();
@@ -1816,7 +1835,6 @@
         cols = 1;
         rows = count;
       } else {
-        // Grid 2x2
         cols = Math.ceil(Math.sqrt(count));
         rows = Math.ceil(count / cols);
       }
@@ -1840,7 +1858,6 @@
         const dx = gap + c * (cellW + gap);
         const dy = gap + r * (cellH + gap);
 
-        // Draw image cover in cell
         const imgRatio = img.naturalWidth / img.naturalHeight;
         const cellRatio = cellW / cellH;
         let sx = 0, sy = 0, sw = img.naturalWidth, sh = img.naturalHeight;
