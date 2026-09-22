@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>StampCam - Chụp Ảnh Đóng Dấu & Tự Động Tìm Giá Bằng AI</title>
+  <title>StampCam - Chụp Ảnh Đóng Dấu & Tìm Giá Chuẩn</title>
 
   <!-- PWA & iOS Safari Meta Tags -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -14,9 +14,6 @@
 
   <!-- JSZip -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <!-- TensorFlow.js & MobileNet (AI Nhận Diện Sản Phẩm Trên Thiết Bị) -->
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.0/dist/mobilenet.min.js"></script>
 
   <style>
     :root {
@@ -90,27 +87,6 @@
       border-radius: 999px;
       font-weight: 500;
       border: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .btn-header-tool {
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text-dim);
-      border: 1px solid var(--card-border);
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      text-decoration: none;
-    }
-
-    .btn-header-tool.shopee {
-      background: rgba(238, 77, 45, 0.15);
-      color: #ff7854;
-      border-color: rgba(238, 77, 45, 0.3);
     }
 
     /* Main Container */
@@ -226,6 +202,34 @@
     }
 
     .btn-step:active { transform: scale(0.92); background: rgba(255, 255, 255, 0.15); }
+
+    /* Thanh chọn nhanh ngành hàng (Quick Categories) */
+    .quick-categories-bar {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 6px 0 2px;
+      scrollbar-width: none;
+    }
+
+    .cat-chip {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-dim);
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .cat-chip:active {
+      background: #3b82f6;
+      color: #fff;
+      border-color: #3b82f6;
+    }
 
     .quick-preview-tag {
       margin-top: 10px;
@@ -558,44 +562,39 @@
     .btn-main { background: #ffffff; color: #000000; }
     .btn-secondary { background: #27272a; color: #ffffff; }
     .btn-danger { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); }
-    .btn-shopee { background: #ee4d2d; color: #ffffff; }
 
-    /* 🤖 AI & PRICE SUGGESTION BOX IN PREVIEW MODAL */
-    .ai-price-box {
+    /* 🔍 HỘP TRA CỨU GIÁ CHUẨN TRONG MODAL PREVIEW */
+    .smart-price-box {
       background: rgba(20, 22, 31, 0.95);
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 14px;
-      padding: 10px 12px;
+      padding: 12px;
       margin-top: 10px;
       width: 100%;
       max-width: 480px;
     }
 
-    .ai-tag-header {
+    .smart-box-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #60a5fa;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #60a5fa;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
-    .ai-detected-title {
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: #ffffff;
+    .quick-edit-row {
       display: flex;
-      align-items: center;
       gap: 6px;
+      align-items: center;
     }
 
     .price-pills-row {
       display: flex;
       gap: 6px;
       overflow-x: auto;
-      padding: 4px 0;
-      margin-top: 6px;
+      padding: 6px 0 2px;
       scrollbar-width: none;
     }
 
@@ -612,26 +611,22 @@
       transition: all 0.15s;
     }
 
-    .price-pill:active {
-      transform: scale(0.92);
-      background: #fbbf24;
-      color: #000;
-    }
+    .price-pill:active { transform: scale(0.92); background: #fbbf24; color: #000; }
 
     .visual-search-links {
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 6px;
       margin-top: 8px;
     }
 
     .btn-lens-search {
-      flex: 1;
       background: rgba(238, 77, 45, 0.15);
       border: 1px solid rgba(238, 77, 45, 0.3);
       color: #ff8566;
-      padding: 6px 8px;
+      padding: 8px;
       border-radius: 8px;
-      font-size: 0.72rem;
+      font-size: 0.75rem;
       font-weight: 600;
       cursor: pointer;
       text-align: center;
@@ -725,10 +720,10 @@
         <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
         <circle cx="12" cy="13" r="4"></circle>
       </svg>
-      <span>StampCam AI</span>
+      <span>StampCam Pro</span>
     </div>
     <div class="header-right">
-      <div class="header-badge" id="aiStatusBadge">🤖 AI Sẵn sàng</div>
+      <div class="header-badge">Sẵn sàng</div>
     </div>
   </header>
 
@@ -758,11 +753,20 @@
       </div>
 
       <div class="input-group" id="noteInputGroup" style="margin-top: 10px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <label>Tên SP / Giá tiền</label>
-          <span style="color: #60a5fa; font-size: 0.72rem; font-weight: 600;">✨ Tự nhận diện khi chụp</span>
-        </div>
-        <input type="text" id="noteInput" placeholder="Chụp xong AI sẽ tự điền hoặc nhập tay...">
+        <label>Tên SP / Ghi chú / Giá</label>
+        <input type="text" id="noteInput" placeholder="VD: Áo thun trắng - 180k hoặc chọn bên dưới">
+      </div>
+
+      <!-- Thanh chọn nhanh ngành hàng 1 chạm -->
+      <div class="quick-categories-bar" id="categoriesBar">
+        <span class="cat-chip" data-name="Áo thun">👕 Áo thun</span>
+        <span class="cat-chip" data-name="Quần jean">👖 Quần jean</span>
+        <span class="cat-chip" data-name="Váy đầm">👗 Váy đầm</span>
+        <span class="cat-chip" data-name="Giày sneaker">👟 Giày dép</span>
+        <span class="cat-chip" data-name="Túi xách">👜 Túi xách</span>
+        <span class="cat-chip" data-name="Mỹ phẩm">🧴 Mỹ phẩm</span>
+        <span class="cat-chip" data-name="Đồng hồ">⌚ Đồng hồ</span>
+        <span class="cat-chip" data-name="Đồ điện tử">📱 Điện tử</span>
       </div>
 
       <div class="quick-preview-tag">
@@ -956,47 +960,46 @@
     </div>
   </div>
 
-  <!-- 📸 MODAL XEM LẠI & AI TỰ ĐỘNG GỢI Ý GIÁ / TRA SHOPEE THEO HÌNH -->
+  <!-- 📸 MODAL XEM LẠI & TRA GIÁ CHUẨN XÁC THEO MÓN ĐỒ VỪA CHỤP -->
   <div class="modal-backdrop" id="previewModal">
     <div class="modal-header">
-      <h3 style="font-size: 1rem; font-weight: 600; color: #fff;">Ảnh Đã Chụp</h3>
+      <h3 style="font-size: 1rem; font-weight: 600; color: #fff;">Ảnh Vừa Chụp</h3>
       <button class="btn-icon-glass" id="btnClosePreview" style="width: 36px; height: 36px; padding: 0;">✕</button>
     </div>
 
     <div class="modal-body" style="overflow-y: auto; justify-content: flex-start;">
-      <img id="previewModalImg" src="" alt="Ảnh đóng dấu" style="max-width: 100%; max-height: 40vh; border-radius: 12px; border: 1px solid var(--card-border); object-fit: contain;">
+      <img id="previewModalImg" src="" alt="Ảnh đóng dấu" style="max-width: 100%; max-height: 38vh; border-radius: 12px; border: 1px solid var(--card-border); object-fit: contain;">
 
-      <!-- 🤖 HỘP GỢI Ý GIÁ & TÌM BẰNG HÌNH ẢNH CỦA AI -->
-      <div class="ai-price-box">
-        <div class="ai-tag-header">
-          <span>🤖 AI NHẬN DIỆN SẢN PHẨM</span>
-          <span id="aiConfidenceText" style="color: #34d399;">Đang quét...</span>
+      <!-- 🏷️ HỘP TÌM GIÁ CHUẨN XÁC & GẮN VÀO CON DẤU -->
+      <div class="smart-price-box">
+        <div class="smart-box-title">
+          <span>🔍 TRA GIÁ & GẮN VÀO ẢNH</span>
+          <span style="color: var(--text-dim); font-size: 0.7rem;">Chạm để đổi giá ngay</span>
         </div>
 
-        <div class="ai-detected-title">
-          <span id="aiDetectedName">Đang phân tích hình ảnh...</span>
+        <!-- Ô Sửa Tên Sản Phẩm Nhanh -->
+        <div class="quick-edit-row">
+          <input type="text" id="previewNoteInput" placeholder="Nhập tên sản phẩm để tra giá chính xác..." style="font-size: 0.85rem; padding: 8px 10px;">
+          <button class="btn btn-secondary" id="btnUpdatePreviewNote" style="width: auto; padding: 8px 14px; font-size: 0.8rem;">Đổi</button>
         </div>
 
         <!-- Các mức giá gợi ý 1 chạm -->
-        <div style="margin-top: 8px;">
-          <div style="font-size: 0.7rem; color: var(--text-dim);">Gợi ý mức giá nhanh (Chạm để gắn vào tem):</div>
-          <div class="price-pills-row" id="pricePillsContainer">
-            <span class="price-pill" data-price="99.000đ">99k</span>
-            <span class="price-pill" data-price="150.000đ">150k</span>
-            <span class="price-pill" data-price="250.000đ">250k</span>
-            <span class="price-pill" data-price="350.000đ">350k</span>
-            <span class="price-pill" data-price="500.000đ">500k</span>
-            <span class="price-pill" data-price="850.000đ">850k</span>
-          </div>
+        <div class="price-pills-row" id="pricePillsContainer">
+          <span class="price-pill" data-price="99.000đ">99k</span>
+          <span class="price-pill" data-price="150.000đ">150k</span>
+          <span class="price-pill" data-price="250.000đ">250k</span>
+          <span class="price-pill" data-price="350.000đ">350k</span>
+          <span class="price-pill" data-price="500.000đ">500k</span>
+          <span class="price-pill" data-price="850.000đ">850k</span>
         </div>
 
-        <!-- Nút Tra Cứu Giá Bằng Hình Ảnh Trên Shopee & Google Lens -->
+        <!-- Tra cứu trực tiếp trên Shopee & Google Lens -->
         <div class="visual-search-links">
           <a class="btn-lens-search" id="btnSearchShopeeByVisual" target="_blank" href="#">
-            <span>🧡 Tìm giá đúng món này (Shopee)</span>
+            <span>🧡 Xem Giá Shopee</span>
           </a>
           <a class="btn-lens-search google" id="btnSearchGoogleLensByVisual" target="_blank" href="#">
-            <span>💙 Google Shop / Lens</span>
+            <span>💙 Google Lens / Shop</span>
           </a>
         </div>
       </div>
@@ -1049,11 +1052,10 @@
       capturedPhotos: [],
       currentPhotoDataUrl: null,
       currentPhotoCode: '',
-      currentSourceImg: null, // Ảnh nguồn trước khi chèn giá
+      currentSourceImg: null,
       rawPhotoImg: null,
       pins: [],
-      selectedCollageImages: [],
-      netModel: null // TensorFlow MobileNet AI Model
+      selectedCollageImages: []
     };
 
     // DOM Elements
@@ -1070,6 +1072,7 @@
     const prefixInput = document.getElementById('prefixInput');
     const seqInput = document.getElementById('seqInput');
     const noteInput = document.getElementById('noteInput');
+    const categoriesBar = document.getElementById('categoriesBar');
     const btnInc = document.getElementById('btnInc');
     const btnDec = document.getElementById('btnDec');
     const previewCodeText = document.getElementById('previewCodeText');
@@ -1090,13 +1093,18 @@
     const btnSwitchCam = document.getElementById('btnSwitchCam');
     const flashLayer = document.getElementById('flashLayer');
 
-    // AI & Price Suggestion Elements
-    const aiStatusBadge = document.getElementById('aiStatusBadge');
-    const aiConfidenceText = document.getElementById('aiConfidenceText');
-    const aiDetectedName = document.getElementById('aiDetectedName');
+    // Preview Elements & Price Lookup
+    const previewModal = document.getElementById('previewModal');
+    const previewModalImg = document.getElementById('previewModalImg');
+    const previewNoteInput = document.getElementById('previewNoteInput');
+    const btnUpdatePreviewNote = document.getElementById('btnUpdatePreviewNote');
     const pricePillsContainer = document.getElementById('pricePillsContainer');
     const btnSearchShopeeByVisual = document.getElementById('btnSearchShopeeByVisual');
     const btnSearchGoogleLensByVisual = document.getElementById('btnSearchGoogleLensByVisual');
+    const btnClosePreview = document.getElementById('btnClosePreview');
+    const btnRetake = document.getElementById('btnRetake');
+    const btnSaveToPhotos = document.getElementById('btnSaveToPhotos');
+    const btnDownloadSingle = document.getElementById('btnDownloadSingle');
 
     // Collage Elements
     const collageModal = document.getElementById('collageModal');
@@ -1117,14 +1125,7 @@
     const btnFinishPinning = document.getElementById('btnFinishPinning');
     const btnCancelPinEditor = document.getElementById('btnCancelPinEditor');
 
-    // Preview & Gallery Elements
-    const previewModal = document.getElementById('previewModal');
-    const previewModalImg = document.getElementById('previewModalImg');
-    const btnClosePreview = document.getElementById('btnClosePreview');
-    const btnRetake = document.getElementById('btnRetake');
-    const btnSaveToPhotos = document.getElementById('btnSaveToPhotos');
-    const btnDownloadSingle = document.getElementById('btnDownloadSingle');
-
+    // Gallery Elements
     const galleryModal = document.getElementById('galleryModal');
     const btnOpenGallery = document.getElementById('btnOpenGallery');
     const btnCloseGallery = document.getElementById('btnCloseGallery');
@@ -1140,113 +1141,55 @@
     const canvas = document.getElementById('stampCanvas');
     const ctx = canvas.getContext('2d');
 
-    // 🤖 KHỞI TẠO AI NHẬN DIỆN TRÊN THIẾT BỊ (ON-DEVICE MOBILE AI)
-    async function loadAIModel() {
-      try {
-        if (typeof mobilenet !== 'undefined') {
-          state.netModel = await mobilenet.load({ version: 2, alpha: 1.0 });
-          aiStatusBadge.textContent = '⚡ AI Sẵn sàng';
-          aiStatusBadge.style.color = '#34d399';
-        }
-      } catch (e) {
-        console.log('AI load error:', e);
-      }
-    }
+    // 🏷️ Xử lý chọn nhanh ngành hàng (Categories Chips)
+    categoriesBar.querySelectorAll('.cat-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const name = chip.dataset.name;
+        noteInput.value = name;
+        updateLivePreview();
+        showToast(`Đã chọn: ${name}`);
+      });
+    });
 
-    // Từ điển dịch nhãn tiếng Anh sang tiếng Việt phổ biến cho sản phẩm
-    const labelDict = {
-      'running shoe': 'Giày chạy bộ / Thể thao',
-      'shoe': 'Giày dép',
-      'sneaker': 'Giày Sneaker',
-      'sandal': 'Dép sandal',
-      'loafer': 'Giày lười',
-      'jersey': 'Áo thun thể thao',
-      't-shirt': 'Áo thun / Phông',
-      'shirt': 'Áo sơ mi',
-      'suit': 'Bộ vest / Âu phục',
-      'jean': 'Quần jean',
-      'purse': 'Túi xách nữ',
-      'backpack': 'Balo / Cặp xách',
-      'handbag': 'Túi xách',
-      'wallet': 'Ví tiền',
-      'watch': 'Đồng hồ',
-      'sunglass': 'Kính râm / Mắt kính',
-      'glasses': 'Kính mắt',
-      'lipstick': 'Son môi / Mỹ phẩm',
-      'lotion': 'Kem dưỡng / Mỹ phẩm',
-      'bottle': 'Chai lọ / Mỹ phẩm',
-      'perfume': 'Nước hoa',
-      'laptop': 'Máy tính laptop',
-      'mouse': 'Chuột máy tính',
-      'keyboard': 'Bàn phím',
-      'cellular telephone': 'Điện thoại di động',
-      'cup': 'Cốc / Ly uống nước',
-      'coffee mug': 'Ly trà / Cà phê',
-      'necklace': 'Dây chuyền / Trang sức',
-      'ring': 'Nhẫn / Trang sức',
-      'pillow': 'Gối / Nệm',
-      'hat': 'Mũ / Nón',
-      'cap': 'Nón lưỡi trai'
-    };
-
-    function translateLabel(enLabel) {
-      const lower = enLabel.toLowerCase();
-      for (const [key, val] of Object.entries(labelDict)) {
-        if (lower.includes(key)) return val;
-      }
-      return enLabel.split(',')[0];
-    }
-
-    // Phân tích hình ảnh và tìm giá tự động
-    async function analyzeImageAndSuggestPrice(imageElement) {
-      aiConfidenceText.textContent = 'Đang quét...';
-      aiDetectedName.textContent = 'Đang phân tích hình ảnh...';
-
-      let detectedKeywords = 'sản phẩm';
-
-      if (state.netModel) {
-        try {
-          const predictions = await state.netModel.classify(imageElement);
-          if (predictions && predictions.length > 0) {
-            const top = predictions[0];
-            const vnName = translateLabel(top.className);
-            detectedKeywords = vnName;
-            const percent = Math.round(top.probability * 100);
-
-            aiDetectedName.textContent = `🏷️ ${vnName}`;
-            aiConfidenceText.textContent = `Độ khớp: ${percent}%`;
-
-            // Tự động gợi ý vào ô Note nếu đang trống
-            if (!noteInput.value.trim()) {
-              noteInput.value = vnName;
-              updateLivePreview();
-            }
-          }
-        } catch (err) {
-          aiDetectedName.textContent = 'Sản phẩm mới';
-          aiConfidenceText.textContent = 'Sẵn sàng tra giá';
-        }
-      } else {
-        detectedKeywords = noteInput.value.trim() || 'sản phẩm';
-        aiDetectedName.textContent = `🏷️ ${detectedKeywords}`;
-        aiConfidenceText.textContent = 'Sẵn sàng tra giá';
-      }
-
-      // Cập nhật link tìm giá theo ảnh trên Shopee & Google
-      const q = encodeURIComponent(detectedKeywords);
+    // Cập nhật link tra cứu giá
+    function updateSearchLinks(keyword) {
+      const q = encodeURIComponent(keyword.trim() || 'sản phẩm');
       btnSearchShopeeByVisual.href = `https://shopee.vn/search?keyword=${q}`;
       btnSearchGoogleLensByVisual.href = `https://www.google.com/search?tbm=shop&q=${q}`;
     }
 
-    // Xử lý khi bấm vào các viên giá gợi ý (Price Pill)
+    // Đổi tên / giá trên Modal xem ảnh
+    btnUpdatePreviewNote.addEventListener('click', () => {
+      const newText = previewNoteInput.value.trim();
+      noteInput.value = newText;
+      updateLivePreview();
+      updateSearchLinks(newText);
+
+      if (state.currentSourceImg) {
+        drawSingleStampOnCanvas(state.currentSourceImg, state.currentSourceImg.naturalWidth, state.currentSourceImg.naturalHeight);
+        const newUrl = canvas.toDataURL('image/jpeg', 0.95);
+        state.currentPhotoDataUrl = newUrl;
+        previewModalImg.src = newUrl;
+        if (state.capturedPhotos.length > 0) {
+          state.capturedPhotos[0].dataUrl = newUrl;
+          lastCapturedThumb.src = newUrl;
+        }
+      }
+      showToast('Đã cập nhật tên sản phẩm & con dấu!');
+    });
+
+    // Gắn giá nhanh 1 chạm
     pricePillsContainer.querySelectorAll('.price-pill').forEach(pill => {
       pill.addEventListener('click', () => {
         const price = pill.dataset.price;
-        const currentName = aiDetectedName.textContent.replace('🏷️', '').trim() || noteInput.value.trim();
-        noteInput.value = currentName ? `${currentName} - ${price}` : price;
+        const currentName = previewNoteInput.value.trim() || noteInput.value.trim();
+        const baseName = currentName.split('-')[0].trim();
+        const combined = baseName ? `${baseName} - ${price}` : price;
+
+        previewNoteInput.value = combined;
+        noteInput.value = combined;
         updateLivePreview();
 
-        // Vẽ lại con dấu lên ảnh hiện tại với giá vừa chọn
         if (state.currentSourceImg) {
           drawSingleStampOnCanvas(state.currentSourceImg, state.currentSourceImg.naturalWidth, state.currentSourceImg.naturalHeight);
           const newUrl = canvas.toDataURL('image/jpeg', 0.95);
@@ -1467,8 +1410,10 @@
           const finalUrl = canvas.toDataURL('image/jpeg', 0.92);
           const code = getFormattedCode();
           onPhotoSaved(finalUrl, code);
-          // AI Tự Động Phân Tích Hình Ảnh Vừa Chụp
-          analyzeImageAndSuggestPrice(img);
+
+          // Cập nhật ô nhập tên trong modal
+          previewNoteInput.value = noteInput.value.trim();
+          updateSearchLinks(noteInput.value.trim());
         } else {
           state.pins = [];
           state.rawPhotoImg = img;
@@ -2033,7 +1978,6 @@
 
     updateLivePreview();
     startCamera();
-    loadAIModel();
   </script>
 </body>
 </html>
