@@ -288,6 +288,16 @@
       margin-top: 1px;
     }
 
+    /* Size Modifiers for Live Overlay */
+    .size-small .stamp-num { font-size: 0.92rem; }
+    .size-small .stamp-note { font-size: 0.68rem; }
+    .size-small .stamp-sub { font-size: 0.58rem; }
+    .size-small .stamp-badge { padding: 4px 9px; border-radius: 8px; }
+
+    .size-normal .stamp-num { font-size: 1.1rem; }
+    .size-large .stamp-num { font-size: 1.32rem; }
+    .size-xlarge .stamp-num { font-size: 1.6rem; }
+
     /* Camera Switch */
     .camera-top-actions {
       position: absolute;
@@ -815,6 +825,7 @@
         <div class="input-group">
           <label>Cỡ chữ</label>
           <select id="fontSizeSelect">
+            <option value="small">Nhỏ gọn (Gọn gàng)</option>
             <option value="normal">Vừa phải</option>
             <option value="large" selected>To rõ ràng</option>
             <option value="xlarge">Cực đại</option>
@@ -1015,7 +1026,7 @@
         overlayStampDate.style.display = 'none';
       }
 
-      liveStamp.className = `stamp-overlay pos-${posSelect.value} ${styleSelect.value}`;
+      liveStamp.className = `stamp-overlay pos-${posSelect.value} ${styleSelect.value} size-${fontSizeSelect.value}`;
     }
 
     setInterval(() => {
@@ -1092,6 +1103,7 @@
       const fontSizeMode = fontSizeSelect.value;
 
       let baseFontSize = Math.max(30, Math.round(width * 0.042));
+      if (fontSizeMode === 'small') baseFontSize = Math.round(baseFontSize * 0.7);
       if (fontSizeMode === 'large') baseFontSize = Math.round(baseFontSize * 1.35);
       if (fontSizeMode === 'xlarge') baseFontSize = Math.round(baseFontSize * 1.8);
 
