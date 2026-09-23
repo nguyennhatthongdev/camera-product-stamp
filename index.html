@@ -562,7 +562,17 @@
     .pin-pill {
       background: rgba(0, 0, 0, 0.85); color: #fff; padding: 4px 10px; border-radius: 8px; font-size: 0.78rem;
       font-weight: 800; white-space: nowrap; border: 1px solid rgba(255, 255, 255, 0.3); box-shadow: 0 4px 12px rgba(0,0,0,0.6);
-      display: flex; align-items: center; gap: 6px;
+      display: flex; align-items: center; gap: 6px; user-select: none;
+    }
+    .pin-code-label {
+      cursor: pointer; padding: 1px 4px; border-radius: 4px; transition: all 0.15s ease;
+      display: inline-flex; align-items: center; gap: 3px;
+    }
+    .pin-code-label:hover { background: rgba(255, 255, 255, 0.2); color: #38bdf8; }
+    .pin-edit-input {
+      background: rgba(15, 23, 42, 0.95); color: #38bdf8; border: 1.5px solid #38bdf8;
+      border-radius: 4px; font-size: 0.78rem; font-weight: 800; padding: 1px 4px;
+      width: 75px; outline: none; font-family: inherit; text-align: center;
     }
     .pin-del-btn { color: #f87171; font-size: 0.75rem; padding: 0 2px; font-weight: bold; cursor: pointer; }
     .pin-pointer {
@@ -1202,7 +1212,7 @@
           editorImage.src = dataUrl;
           renderPins();
           pinEditorModal.style.display = 'flex';
-          showToast('Chạm vào từng sản phẩm để ghim mã');
+          showToast('Chạm ảnh để ghim, bấm vào mã để sửa');
         }
       };
       img.src = dataUrl;
@@ -1245,20 +1255,67 @@
 
         pinEl.innerHTML = `
           <div class="pin-pill">
-            <span>${pin.code}</span>
+            <span class="pin-code-label" title="Chạm để sửa mã">${pin.code}</span>
             <span class="pin-del-btn" title="Xóa">✕</span>
           </div>
           <div class="pin-pointer"></div>
         `;
 
+        // Prevent clicking pin from creating another pin behind it
+        pinEl.addEventListener('click', (ev) => {
+          ev.stopPropagation();
+        });
+
+        // Edit pin code on click
+        const codeLabel = pinEl.querySelector('.pin-code-label');
+        codeLabel.addEventListener('click', (ev) => {
+          ev.stopPropagation();
+          const input = document.createElement('input');
+          input.type = 'text';
+          input.className = 'pin-edit-input';
+          input.value = pin.code;
+
+          let committed = false;
+          const commit = () => {
+            if (committed) return;
+            committed = true;
+            const newCode = input.value.trim();
+            if (newCode) {
+              pin.code = newCode;
+              const numMatch = newCode.match(/(\d+)(?!.*\d)/);
+              if (numMatch) {
+                pin.seq = parseInt(numMatch[1], 10);
+              }
+            }
+            renderPins();
+          };
+
+          input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+              commit();
+            } else if (e.key === 'Escape') {
+              committed = true;
+              renderPins();
+            }
+            e.stopPropagation();
+          });
+
+          input.addEventListener('blur', () => {
+            commit();
+          });
+
+          input.addEventListener('click', (e) => {
+            e.stopPropagation();
+          });
+
+          codeLabel.replaceWith(input);
+          input.focus();
+          input.select();
+        });
+
         pinEl.querySelector('.pin-del-btn').addEventListener('click', (ev) => {
           ev.stopPropagation();
           state.pins.splice(index, 1);
-          const startSeq = parseInt(seqInput.value || 1, 10);
-          state.pins.forEach((p, i) => {
-            p.seq = startSeq + i;
-            p.code = getFormattedCode(p.seq);
-          });
           renderPins();
         });
 
@@ -1286,7 +1343,9 @@
 
       drawMultiPinsOnCanvas(state.rawPhotoImg, state.rawPhotoImg.naturalWidth, state.rawPhotoImg.naturalHeight, state.pins);
       const finalUrl = canvas.toDataURL('image/jpeg', 0.95);
-      const summaryCode = `${state.pins[0].code} - ${state.pins[state.pins.length - 1].code} (${state.pins.length} SP)`;
+      const summaryCode = state.pins.length === 1
+        ? `${state.pins[0].code} (1 SP)`
+        : `${state.pins[0].code} - ${state.pins[state.pins.length - 1].code} (${state.pins.length} SP)`;
 
       if (autoIncSwitch.checked) {
         seqInput.value = state.pins[state.pins.length - 1].seq + 1;
